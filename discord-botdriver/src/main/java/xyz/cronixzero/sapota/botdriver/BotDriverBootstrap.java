@@ -1,5 +1,5 @@
 /* 
-Coded for Notazo
+Coded for Sapota
 Made by CronixZero
 Created 18.10.2021 - 21:58
  */
@@ -13,11 +13,10 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
 import javax.security.auth.login.LoginException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class BotDriverBootstrap {
 
@@ -30,8 +29,14 @@ public class BotDriverBootstrap {
         BotDescription description;
 
         if (!configuration.exists()) {
+            InputStream stream = BotDriverBootstrap.class.getResourceAsStream("bot_driver.json");
+
+            if (stream == null) {
+                throw new NullPointerException("bot_driver.json is not existent");
+            }
+
             try {
-                FileUtil.copyResource("bot_driver.json", "./");
+                Files.copy(stream, Paths.get("./"));
             } catch (IOException e) {
                 logger.atSevere().withCause(e).log("Could not create bot_driver.json");
             }
