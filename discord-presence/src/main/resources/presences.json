@@ -1,0 +1,12 @@
+[
+  {
+    "text": "Enter Text to be displayed as Status here",
+    "type": "LISTENING",
+    "status": "DO_NOT_DISTURB"
+  },
+  {
+    "text": "Presences will switch through automatically by the defined time!",
+    "type": "WATCHING",
+    "status": "DO_NOT_DISTURB"
+  }
+]
