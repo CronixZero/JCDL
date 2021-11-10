@@ -1,3 +1,6 @@
 {
-  "main": "Put Main Class Here"
+  "token": "Put Discord Bot Token here",
+  "main": "Put Main Class Here",
+  "handlingOwnPresence": false,
+  "presenceSwitchDuration": 35
 }
