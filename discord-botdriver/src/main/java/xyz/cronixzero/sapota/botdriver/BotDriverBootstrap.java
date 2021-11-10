@@ -9,6 +9,8 @@ package xyz.cronixzero.sapota.botdriver;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import de.cronixzero.notazo.presence.PresenceApi;
+import de.cronixzero.notazo.presence.PresenceTask;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
