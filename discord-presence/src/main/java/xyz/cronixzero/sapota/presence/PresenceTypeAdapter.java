@@ -4,7 +4,7 @@ Made by CronixZero
 Created 15.10.2021 - 03:37
  */
 
-package de.cronixzero.notazo.presence;
+package xyz.cronixzero.sapota.presence;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
