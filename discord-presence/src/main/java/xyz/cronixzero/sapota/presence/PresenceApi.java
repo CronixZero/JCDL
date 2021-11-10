@@ -4,7 +4,7 @@ Made by CronixZero
 Created 15.10.2021 - 03:14
  */
 
-package de.cronixzero.notazo.presence;
+package xyz.cronixzero.sapota.presence;
 
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;

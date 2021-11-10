@@ -4,7 +4,7 @@ Made by CronixZero
 Created 15.10.2021 - 02:50
  */
 
-package de.cronixzero.notazo.presence;
+package xyz.cronixzero.sapota.presence;
 
 import com.google.common.base.MoreObjects;
 import net.dv8tion.jda.api.OnlineStatus;

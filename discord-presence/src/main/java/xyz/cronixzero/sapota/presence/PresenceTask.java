@@ -4,7 +4,7 @@ Made by CronixZero
 Created 15.10.2021 - 15:55
  */
 
-package de.cronixzero.notazo.presence;
+package xyz.cronixzero.sapota.presence;
 
 import com.google.common.util.concurrent.AbstractScheduledService;
 import org.jetbrains.annotations.NotNull;
