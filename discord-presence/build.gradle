@@ -11,10 +11,6 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation project(":discord-presence")
-}
-
 java {
     withJavadocJar()
     withSourcesJar()
@@ -25,8 +21,8 @@ publishing {
         mavenJava(MavenPublication) {
             from(components.java)
             pom {
-                name = 'Sapota Discord Bot Driver'
-                description = 'Bot Driver helps to start Discord Bots and manages common features for developers'
+                name = 'Sapota Discord Bot Presence'
+                description = 'Bot Presence helps Discord Bots to manage their Discord Bot Presence'
                 url = 'https://github.com/CronixZero/Sapota'
                 inceptionYear = '2021'
                 licenses {
@@ -57,3 +53,4 @@ signing {
     sign publishing.publications.mavenJava
     sign configurations.archives
 }
+
