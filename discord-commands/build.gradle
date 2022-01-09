@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'signing'
+}
+
+group 'xyz.cronixzero.sapota'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from(components.java)
+            pom {
+                name = 'Sapota Discord Bot Command Framework'
+                description = 'Bot Command Framework makes creating and managing Discord Commands easier'
+                url = 'https://github.com/CronixZero/Sapota'
+                inceptionYear = '2021'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'cronixzero'
+                        name = 'CronixZero'
+                    }
+                }
+                scm {
+                    connection = 'scm:https://github.com/CronixZero/Sapota.git'
+                    developerConnection = 'scm:git@github.com:CronixZero/Sapota.git'
+                    url = 'https://github.com/CronixZero/Sapota'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    required { !project.version.endsWith("-SNAPSHOT") && !project.hasProperty("skipSigning") }
+
+    sign publishing.publications.mavenJava
+    sign configurations.archives
+}
