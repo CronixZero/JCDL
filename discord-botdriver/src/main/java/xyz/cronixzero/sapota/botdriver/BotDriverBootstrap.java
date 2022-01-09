@@ -98,7 +98,7 @@ public class BotDriverBootstrap {
                 "(  _ \\ (_  _)/ __) / __)(  _  )(  _ \\(  _ \\   (  _ \\(  _  )(_  _)  (  _ \\ (  _ \\(_  _)( \\/ )( ___)(  _ \\\n" +
                 " )(_) ) _)(_ \\__ \\( (__  )(_)(  )   / )(_) )   ) _ < )(_)(   )(     )(_) ) )   / _)(_  \\  /  )__)  )   /\n" +
                 "(____/ (____)(___/ \\___)(_____)(_)\\_)(____/   (____/(_____) (__)   (____/ (_)\\_)(____)  \\/  (____)(_)\\_)\n";
-        String greetingDescription = "Starting this bot using Discord Bot Driver v1.0 by CronixZero!\n\n";
+        String greetingDescription = "Starting this bot using Discord Bot Driver ${version} by CronixZero!\n\n";
 
         logger.atInfo().log(greetingTitle + greetingDescription);
     }
@@ -125,7 +125,10 @@ public class BotDriverBootstrap {
         } catch (InterruptedException e) {
             logger.atSevere().withCause(e).log("Could not await ready");
             Thread.currentThread().interrupt();
+            return;
         }
+
+        driver.onStart(bot);
     }
 
 }
