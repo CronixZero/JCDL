@@ -44,13 +44,13 @@ public class ConfigurationTypeAdapter extends TypeAdapter<MessageContainer> {
 
         in.beginObject();
 
-        while(in.hasNext()) {
-            if(in.peek().equals(JsonToken.END_OBJECT)) {
+        while (in.hasNext()) {
+            if (in.peek().equals(JsonToken.END_OBJECT)) {
                 in.endObject();
                 break;
             }
 
-            switch(in.nextName().toLowerCase(Locale.ROOT)) {
+            switch (in.nextName().toLowerCase(Locale.ROOT)) {
                 case "nopermissionmessage":
                     noPermissionMessage = in.nextString();
                     break;
