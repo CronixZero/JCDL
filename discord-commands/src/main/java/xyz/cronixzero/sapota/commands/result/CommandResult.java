@@ -33,35 +33,35 @@ public class CommandResult<E> {
         this.event = event;
     }
 
-    public static CommandResult<Throwable> error(Throwable e) {
+    public static <E extends Throwable> CommandResult<E> error(E e) {
         return new CommandResult<>(CommandResultType.ERROR, e);
     }
 
-    public static CommandResult<Throwable> error(Throwable e, AbstractCommand command, User user, SlashCommandEvent event) {
+    public static <E extends Throwable> CommandResult<E> error(E e, AbstractCommand command, User user, SlashCommandEvent event) {
         return new CommandResult<>(CommandResultType.ERROR, e, command, user, event);
     }
 
-    public static CommandResult<Object> success() {
+    public static CommandResult<?> success() {
         return new CommandResult<>(CommandResultType.SUCCESS, null);
     }
 
-    public static CommandResult<Object> success(AbstractCommand command, User user, SlashCommandEvent event) {
+    public static CommandResult<?> success(AbstractCommand command, User user, SlashCommandEvent event) {
         return new CommandResult<>(CommandResultType.SUCCESS, null, command, user, event);
     }
 
-    public static CommandResult<Object> noPermissions() {
+    public static CommandResult<?> noPermissions() {
         return new CommandResult<>(CommandResultType.NO_PERMISSIONS, null);
     }
 
-    public static CommandResult<Object> noPermissions(AbstractCommand command, User user, SlashCommandEvent event) {
+    public static CommandResult<?> noPermissions(AbstractCommand command, User user, SlashCommandEvent event) {
         return new CommandResult<>(CommandResultType.NO_PERMISSIONS, null, command, user, event);
     }
 
-    public static CommandResult<Object> unknown() {
+    public static CommandResult<?> unknown() {
         return new CommandResult<>(CommandResultType.UNKNOWN, null);
     }
 
-    public static CommandResult<Object> unknown(AbstractCommand command, User user, SlashCommandEvent event) {
+    public static CommandResult<?> unknown(AbstractCommand command, User user, SlashCommandEvent event) {
         return new CommandResult<>(CommandResultType.UNKNOWN, null, command, user, event);
     }
 

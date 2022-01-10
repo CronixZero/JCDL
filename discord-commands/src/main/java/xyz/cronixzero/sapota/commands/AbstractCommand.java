@@ -56,8 +56,12 @@ public abstract class AbstractCommand {
         this.permission = permission;
     }
 
-    protected CommandResult onCommand(User user, SlashCommandEvent event) {
+    protected CommandResult<?> onCommand(User user, SlashCommandEvent event) {
         return CommandResult.unknown(this, user, event);
+    }
+
+    public void onError(CommandResult<? extends Throwable> e) {
+
     }
 
     protected Set<OptionData> registerOptions() {
