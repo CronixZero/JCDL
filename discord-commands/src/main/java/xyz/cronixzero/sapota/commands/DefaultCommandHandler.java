@@ -6,6 +6,7 @@ Created 11.01.2022 - 02:06
 
 package xyz.cronixzero.sapota.commands;
 
+import xyz.cronixzero.sapota.commands.messaging.MessageContainer;
 import xyz.cronixzero.sapota.commands.result.CommandResult;
 
 import java.lang.reflect.Method;
@@ -15,6 +16,11 @@ import java.util.Map;
 public class DefaultCommandHandler implements CommandHandler {
 
     private final Map<String, Command> commands = new HashMap<>();
+    private final MessageContainer messageContainer;
+
+    public DefaultCommandHandler(MessageContainer messageContainer) {
+        this.messageContainer = messageContainer;
+    }
 
     @Override
     public void registerCommand(Command command) {
