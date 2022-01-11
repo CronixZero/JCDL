@@ -14,7 +14,7 @@ public abstract class AbstractSubCommand extends AbstractCommand {
         super(name);
     }
 
-    protected AbstractSubCommand(String name, String[] aliases) {
+    protected AbstractSubCommand(String name, String... aliases) {
         super(name, aliases);
     }
 
@@ -22,15 +22,15 @@ public abstract class AbstractSubCommand extends AbstractCommand {
         super(name, description);
     }
 
-    protected AbstractSubCommand(String name, String[] aliases, String description) {
-        super(name, aliases, description);
+    protected AbstractSubCommand(String name, String description, String... aliases) {
+        super(name, description, aliases);
     }
 
     protected AbstractSubCommand(String name, String description, Permission permission) {
         super(name, description, permission);
     }
 
-    protected AbstractSubCommand(String name, String[] aliases, String description, Permission permission) {
-        super(name, aliases, description, permission);
+    protected AbstractSubCommand(String name, String description, Permission permission, String... aliases) {
+        super(name, description, permission, aliases);
     }
 }

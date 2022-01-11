@@ -27,7 +27,7 @@ public abstract class AbstractCommand {
         this.name = name;
     }
 
-    protected AbstractCommand(String name, String[] aliases) {
+    protected AbstractCommand(String name, String... aliases) {
         this.name = name;
         this.aliases = aliases;
     }
@@ -37,7 +37,7 @@ public abstract class AbstractCommand {
         this.description = description;
     }
 
-    protected AbstractCommand(String name, String[] aliases, String description) {
+    protected AbstractCommand(String name, String description, String... aliases) {
         this.name = name;
         this.aliases = aliases;
         this.description = description;
@@ -49,7 +49,7 @@ public abstract class AbstractCommand {
         this.permission = permission;
     }
 
-    protected AbstractCommand(String name, String[] aliases, String description, Permission permission) {
+    protected AbstractCommand(String name, String description, Permission permission, String... aliases) {
         this.name = name;
         this.aliases = aliases;
         this.description = description;
