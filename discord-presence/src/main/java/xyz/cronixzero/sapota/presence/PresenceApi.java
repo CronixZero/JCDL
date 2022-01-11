@@ -39,7 +39,7 @@ public class PresenceApi {
         this.configPath = configPath;
     }
 
-    public void updatePresence() throws IOException {
+    public void updatePresence() {
         considerUpdatingPresences();
 
         if (presences.isEmpty())
@@ -58,7 +58,14 @@ public class PresenceApi {
         currentPresence++;
     }
 
-    private void considerUpdatingPresences() throws IOException {
+    private void considerUpdatingPresences() {
+        if (presences.isEmpty())
+            update();
+        else
+            new Thread(this::update).start();
+    }
+
+    private void update() {
         File configFile = new File(configPath);
 
         if (!configFile.exists()) {
@@ -68,29 +75,33 @@ public class PresenceApi {
                 throw new NullPointerException(configPath + " does not exist");
             }
 
-            Files.copy(stream, Paths.get("./"));
-
-            JsonArray configPresences;
             try {
-                configPresences = new Gson().fromJson(new FileReader(configFile), JsonArray.class);
-            } catch (FileNotFoundException e) {
-                logger.atSevere().withCause(e).log("The Configuration File '" + configPath + "' could not be found");
-                return;
+                Files.copy(stream, Paths.get("./"));
+            } catch (IOException e) {
+                logger.atSevere().withCause(e).log("Could not create Configuration File");
             }
+        }
 
-            if (configPresences == null)
-                throw new IllegalStateException("The Configuration File '" + configPath + "' could not be read");
+        JsonArray configPresences;
+        try {
+            configPresences = new Gson().fromJson(new FileReader(configFile), JsonArray.class);
+        } catch (FileNotFoundException e) {
+            logger.atSevere().withCause(e).log("The Configuration File '" + configPath + "' could not be found");
+            return;
+        }
 
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeAdapter(Presence.class, new PresenceTypeAdapter());
-            Gson gson = gsonBuilder.create();
+        if (configPresences == null)
+            throw new IllegalStateException("The Configuration File '" + configPath + "' could not be read");
 
-            presences.clear();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Presence.class, new PresenceTypeAdapter());
+        Gson gson = gsonBuilder.create();
 
-            for (int i = 0; i < configPresences.size(); i++) {
-                Presence presence = gson.fromJson(configPresences.get(i), Presence.class);
-                presences.add(presence);
-            }
+        presences.clear();
+
+        for (int i = 0; i < configPresences.size(); i++) {
+            Presence presence = gson.fromJson(configPresences.get(i), Presence.class);
+            presences.add(presence);
         }
     }
 }

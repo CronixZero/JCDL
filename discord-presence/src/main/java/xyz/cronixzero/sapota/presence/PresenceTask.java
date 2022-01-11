@@ -9,7 +9,6 @@ package xyz.cronixzero.sapota.presence;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
@@ -24,7 +23,7 @@ public class PresenceTask extends AbstractScheduledService {
     }
 
     @Override
-    protected void runOneIteration() throws IOException {
+    protected void runOneIteration() {
         presenceApi.updatePresence();
     }
 
