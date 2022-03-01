@@ -11,22 +11,30 @@ JCDL is seperated into SubProjects:
 
 ## Discord Bot Driver
 ### Gradle
-```implementation 'xyz.cronixzero.sapota:discord-botdriver:1.0.0'```
+```
+implementation 'xyz.cronixzero.sapota:discord-botdriver:1.0.0'
+```
 
 ### Maven
-```<dependency>
+```
+<dependency>
   <groupId>xyz.cronixzero.sapota</groupId>
   <artifactId>discord-botdriver</artifactId>
   <version>1.0.0</version>
-</dependency>```
+</dependency>
+```
 
 ## Discord Presence
 ### Gradle
-`implementation '``xyz.cronixzero.sapota:discord-presence:1.0.0'```
+```
+implementation 'xyz.cronixzero.sapota:discord-presence:1.0.0
+'```
 
 ### Maven
-```<dependency>
+```
+<dependency>
   <groupId>xyz.cronixzero.sapota</groupId>
   <artifactId>discord-presence</artifactId>
   <version>1.0.0</version>
-</dependency>```
+</dependency>
+```
