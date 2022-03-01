@@ -27,8 +27,8 @@ implementation 'xyz.cronixzero.sapota:discord-botdriver:1.0.0'
 ## Discord Presence
 ### Gradle
 ```
-implementation 'xyz.cronixzero.sapota:discord-presence:1.0.0
-'```
+implementation 'xyz.cronixzero.sapota:discord-presence:1.0.0'
+```
 
 ### Maven
 ```
