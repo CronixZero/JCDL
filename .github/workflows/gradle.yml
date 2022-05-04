@@ -22,7 +22,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build -PskipSigning=true
+      run: ./gradlew assemble -PskipSigning=true
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.4
       with:
