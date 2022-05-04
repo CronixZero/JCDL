@@ -1,4 +1,4 @@
-# Java Common Discord Library [![Java CI with Gradle](https://github.com/CronixZero/JCDL/actions/workflows/gradle.yml/badge.svg)](https://github.com/CronixZero/JCDL/actions/workflows/gradle.yml)
+# Java Common Discord Library [![Java CI with Gradle](https://github.com/CronixZero/JCDL/actions/workflows/gradle.yml/badge.svg)](https://github.com/CronixZero/JCDL/actions/workflows/gradle.yml) [![Qodana](https://github.com/CronixZero/JCDL/actions/workflows/qodana-analysis.yml/badge.svg)](https://github.com/CronixZero/JCDL/actions/workflows/qodana-analysis.yml)
 JCDL is designed to make creating Bots with Java the easiest is has ever been.
 
 JCDL is seperated into SubProjects:
