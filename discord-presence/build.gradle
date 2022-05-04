@@ -21,9 +21,9 @@ publishing {
         mavenJava(MavenPublication) {
             from(components.java)
             pom {
-                name = 'Sapota Discord Bot Presence'
-                description = 'Bot Presence helps Discord Bots to manage their Discord Bot Presence'
-                url = 'https://github.com/CronixZero/Sapota'
+                name = 'Java Common Discord Presence'
+                description = 'Make managing your Discord Bot Presence as simple as writing into a json document'
+                url = 'https://github.com/CronixZero/JCDL'
                 inceptionYear = '2021'
                 licenses {
                     license {
@@ -38,9 +38,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:https://github.com/CronixZero/Sapota.git'
-                    developerConnection = 'scm:git@github.com:CronixZero/Sapota.git'
-                    url = 'https://github.com/CronixZero/Sapota'
+                    connection = 'scm:https://github.com/CronixZero/JCDL.git'
+                    developerConnection = 'scm:git@github.com:CronixZero/JCDL.git'
+                    url = 'https://github.com/CronixZero/JCDL'
                 }
             }
         }
