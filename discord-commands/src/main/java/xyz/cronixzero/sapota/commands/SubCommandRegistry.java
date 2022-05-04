@@ -6,6 +6,7 @@ Created 11.01.2022 - 02:08
 
 package xyz.cronixzero.sapota.commands;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
@@ -17,6 +18,7 @@ public class SubCommandRegistry implements Iterable<SubCommandRegistry.SubComman
 
     private final Map<String, SubCommandInfo> subCommands = new HashMap<>();
 
+    @ApiStatus.Internal
     public void registerSubCommand(SubCommand subCommand, Class<? extends Command> commandClass) {
         String key = (!subCommand.subCommandGroup().equals("")
                 ? subCommand.subCommandGroup() + "/"

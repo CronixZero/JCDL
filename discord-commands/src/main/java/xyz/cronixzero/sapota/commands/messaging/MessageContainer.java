@@ -14,6 +14,10 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * This Class contains Messages that will be sent to {@link net.dv8tion.jda.api.entities.User}s in case of an Error
+ * or an NoPermission {@link xyz.cronixzero.sapota.commands.result.CommandResult}
+ * */
 public class MessageContainer {
 
     private static final FluentLogger logger = FluentLogger.forEnclosingClass();

@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import org.jetbrains.annotations.ApiStatus;
 import xyz.cronixzero.sapota.commands.listener.CommandListener;
 import xyz.cronixzero.sapota.commands.messaging.MessageContainer;
 import xyz.cronixzero.sapota.commands.result.CommandResponseHandler;
@@ -102,6 +103,7 @@ public class DefaultCommandHandler implements CommandHandler {
         updateAction.getJDA().addEventListener(new CommandListener(this));
     }
 
+    @ApiStatus.Internal
     @Override
     public CommandResult<?> dispatchCommand(String commandName, User user, SlashCommandEvent event) {
         AbstractCommand command = commands.get(commandName);
@@ -119,6 +121,7 @@ public class DefaultCommandHandler implements CommandHandler {
         return result;
     }
 
+    @ApiStatus.Internal
     @Override
     public CommandResult<?> dispatchSubCommand(String commandName, String subCommandName, User user, SlashCommandEvent event) {
         Command command = commands.get(commandName);
@@ -155,6 +158,7 @@ public class DefaultCommandHandler implements CommandHandler {
         }
     }
 
+    @ApiStatus.Internal
     @Override
     public CommandResult<?> dispatchSubCommand(String command, String subCommandGroup, String subCommand, User user, SlashCommandEvent event) {
         return dispatchSubCommand(command, subCommandGroup + "/" + subCommand, user, event);

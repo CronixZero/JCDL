@@ -48,6 +48,14 @@ public abstract class Command extends AbstractCommand {
         return subCommandRegistry;
     }
 
+    /**
+     * Transform this {@link Command} into {@link CommandData}
+     *
+     * @throws NoSuchMethodException     If Options Method could not be found
+     * @throws InstantiationException    If the OptionsClass could not be instantiated
+     * @throws IllegalAccessException    If the Option Method or the Option Class Constructor is not accessible
+     * @throws InvocationTargetException If the Option Method throws an Exception
+     */
     public CommandData toCommandData() throws NoSuchMethodException, InstantiationException,
             IllegalAccessException, InvocationTargetException {
         CommandData data = new CommandData(getName(), getDescription());

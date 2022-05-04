@@ -9,9 +9,14 @@ package xyz.cronixzero.sapota.commands.result;
 import java.lang.annotation.*;
 
 /**
- * Add this Annotation to a Method inside a {@link xyz.cronixzero.sapota.commands.Command}
- * and add a {@link CommandResult} Parameter to the Method to receive Updates on the desired
- * CommandResultType inside the Command
+ * This Annotation defines a Method as a ResponseHandler.
+ * <p>
+ * <pre>{@code
+ *      @CommandResponseHandler(type = CommandResultType.SUCCESS) // or any other Type
+ *      public void onResponse(CommandResult<?> result) {
+ *          System.out.println("Received Result of Type SUCCESS");
+ *      }
+ * }</pre>
  *
  * @see xyz.cronixzero.sapota.commands.Command
  */

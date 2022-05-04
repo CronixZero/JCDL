@@ -26,6 +26,7 @@ public class CommandListener extends ListenerAdapter {
         String sub = event.getSubcommandName();
         CommandResult<?> result;
 
+        // Execute the Commands
         if (sub == null) {
             result = commandHandler.dispatchCommand(command, user, event);
         } else if (group != null) {
@@ -37,13 +38,14 @@ public class CommandListener extends ListenerAdapter {
         if (result == null)
             throw new IllegalStateException("Got null returned as CommandResult from Command " + command);
 
+        // Send Messages from the MessageContainer if the User has no Permissions or an Error happened
         MessageContainer messages = commandHandler.getMessageContainer();
         switch (result.getType()) {
             case ERROR:
                 if (messages.isErrorMessageEnabled()) {
                     Message message = new MessageBuilder(String.format(messages.getErrorMessage(), user.getAsMention()))
                             .build();
-                    event.getChannel().sendMessage(message).queue();
+                    event.reply(message).queue();
                 }
                 break;
 
@@ -51,7 +53,7 @@ public class CommandListener extends ListenerAdapter {
                 if (messages.isNoPermissionMessageEnabled()) {
                     Message message = new MessageBuilder(String.format(messages.getNoPermissionMessage(), user.getAsMention()))
                             .build();
-                    event.getChannel().sendMessage(message).queue();
+                    event.reply(message).queue();
                 }
                 break;
 
