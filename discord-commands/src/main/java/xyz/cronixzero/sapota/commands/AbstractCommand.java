@@ -57,8 +57,11 @@ public abstract class AbstractCommand {
     }
 
     /**
-     * Template onError {@link xyz.cronixzero.sapota.commands.result.CommandResponseHandler)
-     * */
+     * This is a template for an Error-CommandResponseHandler
+     * You need to add {@link xyz.cronixzero.sapota.commands.result.CommandResponseHandler} above the method
+     *
+     * @see xyz.cronixzero.sapota.commands.result.CommandResponseHandler
+     */
     public void onError(CommandResult<? extends Throwable> e) {
 
     }
