@@ -21,9 +21,7 @@ import xyz.cronixzero.sapota.commands.result.CommandResultType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.RejectedExecutionException;
 
 public class DefaultCommandHandler implements CommandHandler {
@@ -106,7 +104,7 @@ public class DefaultCommandHandler implements CommandHandler {
     @ApiStatus.Internal
     @Override
     public CommandResult<?> dispatchCommand(String commandName, User user, SlashCommandEvent event) {
-        AbstractCommand command = commands.get(commandName);
+        Command command = commands.get(commandName);
         CommandResult<?> result = command.onCommand(user, event);
 
         Method handler = command.getResponseHandlers().get(result.getType());
@@ -172,6 +170,11 @@ public class DefaultCommandHandler implements CommandHandler {
     @Override
     public SubCommandRegistry.SubCommandInfo getSubCommandInfo(String command, String subCommand) {
         return getCommand(command).getSubCommandRegistry().getSubCommand(subCommand);
+    }
+
+    @Override
+    public Collection<Command> getCommands() {
+        return Collections.unmodifiableCollection(commands.values());
     }
 
     @Override

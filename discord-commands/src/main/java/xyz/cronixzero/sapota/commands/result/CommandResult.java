@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import xyz.cronixzero.sapota.commands.AbstractCommand;
 import xyz.cronixzero.sapota.commands.Command;
 
 public class CommandResult<E> {
@@ -18,7 +17,7 @@ public class CommandResult<E> {
     private final CommandResultType type;
     private final E hint;
 
-    private AbstractCommand command;
+    private Command command;
     private User user;
     private SlashCommandEvent event;
 
@@ -27,7 +26,7 @@ public class CommandResult<E> {
         this.hint = hint;
     }
 
-    public CommandResult(CommandResultType type, E hint, AbstractCommand command, User user, SlashCommandEvent event) {
+    public CommandResult(CommandResultType type, E hint, Command command, User user, SlashCommandEvent event) {
         this.type = type;
         this.hint = hint;
         this.command = command;
@@ -42,7 +41,7 @@ public class CommandResult<E> {
      *
      * @param <E> Type of Exception
      * @param e   The Exception
-     * @see #error(Throwable, AbstractCommand, User, SlashCommandEvent)
+     * @see #error(Throwable, Command, User, SlashCommandEvent)
      */
     @Contract(value = "_ -> new", pure = true)
     public static <E extends Throwable> @NotNull CommandResult<E> error(E e) {
@@ -62,14 +61,14 @@ public class CommandResult<E> {
      * @see #error(Throwable)
      */
     @Contract(value = "_, _, _, _ -> new", pure = true)
-    public static <E extends Throwable> @NotNull CommandResult<E> error(E e, AbstractCommand command, User user, SlashCommandEvent event) {
+    public static <E extends Throwable> @NotNull CommandResult<E> error(E e, Command command, User user, SlashCommandEvent event) {
         return new CommandResult<>(CommandResultType.ERROR, e, command, user, event);
     }
 
     /**
      * Use this {@link CommandResult} if the Command resulted in a success
      *
-     * @see #success(AbstractCommand, User, SlashCommandEvent)
+     * @see #success(Command, User, SlashCommandEvent)
      * */
     @Contract(value = " -> new", pure = true)
     public static @NotNull CommandResult<Void> success() {
@@ -85,7 +84,7 @@ public class CommandResult<E> {
      * @see #success()
      * */
     @Contract(value = "_, _, _ -> new", pure = true)
-    public static @NotNull CommandResult<Void> success(AbstractCommand command, User user, SlashCommandEvent event) {
+    public static @NotNull CommandResult<Void> success(Command command, User user, SlashCommandEvent event) {
         return new CommandResult<>(CommandResultType.SUCCESS, null, command, user, event);
     }
 
@@ -94,7 +93,7 @@ public class CommandResult<E> {
      * If the {@link xyz.cronixzero.sapota.commands.messaging.MessageContainer} has NoPermission Messages enabled,
      * the Application will send a Message to the User
      *
-     * @see #noPermissions(AbstractCommand, User, SlashCommandEvent)
+     * @see #noPermissions(Command, User, SlashCommandEvent)
      * */
     @Contract(value = " -> new", pure = true)
     public static @NotNull CommandResult<Void> noPermissions() {
@@ -112,14 +111,14 @@ public class CommandResult<E> {
      * @see #noPermissions()
      * */
     @Contract(value = "_, _, _ -> new", pure = true)
-    public static @NotNull CommandResult<Void> noPermissions(AbstractCommand command, User user, SlashCommandEvent event) {
+    public static @NotNull CommandResult<Void> noPermissions(Command command, User user, SlashCommandEvent event) {
         return new CommandResult<>(CommandResultType.NO_PERMISSIONS, null, command, user, event);
     }
 
     /**
      * Use this {@link CommandResult} if something unknown happened that cannot be described
      *
-     * @see #unknown(AbstractCommand, User, SlashCommandEvent)
+     * @see #unknown(Command, User, SlashCommandEvent)
      * */
     @Contract(value = " -> new", pure = true)
     public static @NotNull CommandResult<Void> unknown() {
@@ -135,7 +134,7 @@ public class CommandResult<E> {
      * @see #unknown()
      * */
     @Contract(value = "_, _, _ -> new", pure = true)
-    public static @NotNull CommandResult<Void> unknown(AbstractCommand command, User user, SlashCommandEvent event) {
+    public static @NotNull CommandResult<Void> unknown(Command command, User user, SlashCommandEvent event) {
         return new CommandResult<>(CommandResultType.UNKNOWN, null, command, user, event);
     }
 
@@ -144,6 +143,7 @@ public class CommandResult<E> {
      *
      * @param <T> The Type of your custom Hint
      * @param hint A Hint that contains whatever you like. This will be passed to the {@link CommandResponseHandler}
+     * @see #dynamic(Command, Object, User, SlashCommandEvent)
      * */
     @Contract(value = "_ -> new", pure = true)
     public static <T> @NotNull CommandResult<T> dynamic(T hint) {
@@ -161,7 +161,7 @@ public class CommandResult<E> {
      * @see #unknown()
      * */
     @Contract(value = "_, _, _, _ -> new", pure = true)
-    public static <T> @NotNull CommandResult<T> dynamic(AbstractCommand command, T hint, User user, SlashCommandEvent event) {
+    public static <T> @NotNull CommandResult<T> dynamic(Command command, T hint, User user, SlashCommandEvent event) {
         return new CommandResult<>(CommandResultType.DYNAMIC, null, command, user, event);
     }
 
@@ -189,7 +189,7 @@ public class CommandResult<E> {
         return user;
     }
 
-    public AbstractCommand getCommand() {
+    public Command getCommand() {
         return command;
     }
 

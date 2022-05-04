@@ -7,36 +7,109 @@ Created 09.01.2022 - 18:42
 package xyz.cronixzero.sapota.commands;
 
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 import org.jetbrains.annotations.ApiStatus;
+import xyz.cronixzero.sapota.commands.result.CommandResult;
+import xyz.cronixzero.sapota.commands.result.CommandResultType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Command extends AbstractCommand {
+public abstract class Command {
 
+    private final String name;
+    private final String description;
+
+    private Permission permission;
+    private String[] aliases;
+    private Map<CommandResultType, Method> responseHandlers;
     private SubCommandRegistry subCommandRegistry;
 
     protected Command(String name, String description) {
-        super(name, description);
+        this.name = name;
+        this.description = description;
     }
 
     protected Command(String name, String description, String... aliases) {
-        super(name, description, aliases);
+        this.name = name;
+        this.description = description;
+        this.aliases = aliases;
     }
 
     protected Command(String name, String description, Permission permission) {
-        super(name, description, permission);
+        this.name = name;
+        this.description = description;
+        this.permission = permission;
     }
 
     protected Command(String name, String description, Permission permission, String... aliases) {
-        super(name, description, permission, aliases);
+        this.name = name;
+        this.description = description;
+        this.permission = permission;
+        this.aliases = aliases;
+    }
+
+    /**
+     * Command Method for Commands without SubCommands
+     *
+     * @param user  The executing User
+     * @param event The Event that belongs to this Command Execution
+     */
+    protected CommandResult<?> onCommand(User user, SlashCommandEvent event) {
+        return CommandResult.unknown(this, user, event);
+    }
+
+    /**
+     * This is a template for an Error-CommandResponseHandler
+     * You need to add {@link xyz.cronixzero.sapota.commands.result.CommandResponseHandler} above the method
+     *
+     * @see xyz.cronixzero.sapota.commands.result.CommandResponseHandler
+     */
+    public void onError(CommandResult<? extends Throwable> e) {
+
+    }
+
+    /**
+     * Register the Options for this Command
+     * FOR COMMAND WITHOUT SUBCOMMANDS ONLY
+     */
+    public Collection<OptionData> registerOptions() {
+        return Collections.emptySet();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Permission getPermission() {
+        return permission;
+    }
+
+    public String[] getAliases() {
+        return aliases;
+    }
+
+    @ApiStatus.Internal
+    public void setResponseHandlers(Map<CommandResultType, Method> responseHandlers) {
+        this.responseHandlers = responseHandlers;
+    }
+
+    @ApiStatus.Internal
+    public Map<CommandResultType, Method> getResponseHandlers() {
+        return responseHandlers;
     }
 
     @ApiStatus.Internal

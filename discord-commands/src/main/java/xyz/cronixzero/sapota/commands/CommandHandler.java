@@ -15,6 +15,8 @@ import xyz.cronixzero.sapota.commands.messaging.MessageContainer;
 import xyz.cronixzero.sapota.commands.result.CommandResponseHandler;
 import xyz.cronixzero.sapota.commands.result.CommandResult;
 
+import java.util.Collection;
+
 public interface CommandHandler {
 
     /**
@@ -55,6 +57,8 @@ public interface CommandHandler {
     Command getCommand(String command);
 
     SubCommandRegistry.SubCommandInfo getSubCommandInfo(String command, String subCommand);
+
+    Collection<Command> getCommands();
 
     MessageContainer getMessageContainer();
 

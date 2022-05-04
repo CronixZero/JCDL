@@ -10,9 +10,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class SubCommandRegistry implements Iterable<SubCommandRegistry.SubCommandInfo> {
 
@@ -40,6 +38,10 @@ public class SubCommandRegistry implements Iterable<SubCommandRegistry.SubComman
 
     public SubCommandInfo getSubCommand(String group, String name) {
         return subCommands.get(group + "/" + name);
+    }
+
+    public Collection<SubCommandInfo> getSubCommands() {
+        return Collections.unmodifiableCollection(subCommands.values());
     }
 
     @NotNull
