@@ -26,12 +26,6 @@ public class ConfigurationTypeAdapter extends TypeAdapter<MessageContainer> {
         out.name("errorMessage");
         out.value(value.getErrorMessage());
 
-        out.name("errorMessageEnabled");
-        out.value(value.isErrorMessageEnabled());
-
-        out.name("noPermMessageEnabled");
-        out.value(value.isErrorMessageEnabled());
-
         out.endObject();
     }
 
@@ -39,8 +33,6 @@ public class ConfigurationTypeAdapter extends TypeAdapter<MessageContainer> {
     public MessageContainer read(JsonReader in) throws IOException {
         String noPermissionMessage = null;
         String errorMessage = null;
-        boolean errorMessageEnabled = true;
-        boolean noPermissionMessageEnabled = true;
 
         in.beginObject();
 
@@ -59,19 +51,11 @@ public class ConfigurationTypeAdapter extends TypeAdapter<MessageContainer> {
                     errorMessage = in.nextString();
                     break;
 
-                case "errormessageenabled":
-                    errorMessageEnabled = in.nextBoolean();
-                    break;
-
-                case "nopermmessageenabled":
-                    noPermissionMessageEnabled = in.nextBoolean();
-                    break;
-
                 default:
                     break;
             }
         }
 
-        return new MessageContainer(noPermissionMessage, errorMessage, errorMessageEnabled, noPermissionMessageEnabled);
+        return MessageContainer.create(noPermissionMessage, errorMessage);
     }
 }

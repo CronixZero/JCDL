@@ -10,27 +10,23 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.jetbrains.annotations.ApiStatus;
 import xyz.cronixzero.sapota.commands.result.CommandResult;
+import xyz.cronixzero.sapota.commands.result.CommandResultType;
 
+import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
+import java.util.Map;
 
 public abstract class AbstractCommand {
 
     private final String name;
+    private final String description;
 
-    private String description;
     private Permission permission;
     private String[] aliases;
-
-    protected AbstractCommand(String name) {
-        this.name = name;
-    }
-
-    protected AbstractCommand(String name, String... aliases) {
-        this.name = name;
-        this.aliases = aliases;
-    }
+    private Map<CommandResultType, Method> responseHandlers;
 
     protected AbstractCommand(String name, String description) {
         this.name = name;
@@ -60,11 +56,14 @@ public abstract class AbstractCommand {
         return CommandResult.unknown(this, user, event);
     }
 
+    /**
+     * Template onError {@link xyz.cronixzero.sapota.commands.result.CommandResponseHandler)
+     * */
     public void onError(CommandResult<? extends Throwable> e) {
 
     }
 
-    protected Set<OptionData> registerOptions() {
+    public Collection<OptionData> registerOptions() {
         return Collections.emptySet();
     }
 
@@ -82,5 +81,15 @@ public abstract class AbstractCommand {
 
     public String[] getAliases() {
         return aliases;
+    }
+
+    @ApiStatus.Internal
+    public void setResponseHandlers(Map<CommandResultType, Method> responseHandlers) {
+        this.responseHandlers = responseHandlers;
+    }
+
+    @ApiStatus.Internal
+    public Map<CommandResultType, Method> getResponseHandlers() {
+        return responseHandlers;
     }
 }

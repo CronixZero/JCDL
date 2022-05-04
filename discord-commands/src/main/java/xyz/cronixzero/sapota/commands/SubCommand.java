@@ -17,9 +17,13 @@ public @interface SubCommand {
 
     String name();
 
+    Class<? extends CommandOption> options() default CommandOption.class;
+
     String subCommandGroup() default "";
 
-    String description() default "";
+    String subCommandGroupDescription() default "";
+
+    String description();
 
     Permission permission() default Permission.UNKNOWN;
 

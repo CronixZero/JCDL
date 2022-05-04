@@ -10,11 +10,10 @@ import java.lang.annotation.*;
 
 /**
  * Add this Annotation to a Method inside a {@link xyz.cronixzero.sapota.commands.Command}
- * or a {@link xyz.cronixzero.sapota.commands.AbstractSubCommand} and add a {@link CommandResult} Parameter to the Method
- * to receive Updates on the desired CommandResultType inside the Command
+ * and add a {@link CommandResult} Parameter to the Method to receive Updates on the desired
+ * CommandResultType inside the Command
  *
  * @see xyz.cronixzero.sapota.commands.Command
- * @see xyz.cronixzero.sapota.commands.AbstractSubCommand
  */
 @Documented
 @Target(ElementType.METHOD)

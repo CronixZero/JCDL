@@ -11,6 +11,7 @@ public enum CommandResultType {
     SUCCESS,
     ERROR,
     NO_PERMISSIONS,
-    UNKNOWN
+    UNKNOWN,
+    DYNAMIC
 
 }

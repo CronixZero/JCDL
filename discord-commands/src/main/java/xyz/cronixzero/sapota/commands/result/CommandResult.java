@@ -8,6 +8,8 @@ package xyz.cronixzero.sapota.commands.result;
 
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import xyz.cronixzero.sapota.commands.AbstractCommand;
 import xyz.cronixzero.sapota.commands.Command;
 
@@ -33,36 +35,54 @@ public class CommandResult<E> {
         this.event = event;
     }
 
-    public static <E extends Throwable> CommandResult<E> error(E e) {
+    @Contract(value = "_ -> new", pure = true)
+    public static <E extends Throwable> @NotNull CommandResult<E> error(E e) {
         return new CommandResult<>(CommandResultType.ERROR, e);
     }
 
-    public static <E extends Throwable> CommandResult<E> error(E e, AbstractCommand command, User user, SlashCommandEvent event) {
+    @Contract(value = "_, _, _, _ -> new", pure = true)
+    public static <E extends Throwable> @NotNull CommandResult<E> error(E e, AbstractCommand command, User user, SlashCommandEvent event) {
         return new CommandResult<>(CommandResultType.ERROR, e, command, user, event);
     }
 
-    public static CommandResult<?> success() {
+    @Contract(value = " -> new", pure = true)
+    public static @NotNull CommandResult<Void> success() {
         return new CommandResult<>(CommandResultType.SUCCESS, null);
     }
 
-    public static CommandResult<?> success(AbstractCommand command, User user, SlashCommandEvent event) {
+    @Contract(value = "_, _, _ -> new", pure = true)
+    public static @NotNull CommandResult<Void> success(AbstractCommand command, User user, SlashCommandEvent event) {
         return new CommandResult<>(CommandResultType.SUCCESS, null, command, user, event);
     }
 
-    public static CommandResult<?> noPermissions() {
+    @Contract(value = " -> new", pure = true)
+    public static @NotNull CommandResult<Void> noPermissions() {
         return new CommandResult<>(CommandResultType.NO_PERMISSIONS, null);
     }
 
-    public static CommandResult<?> noPermissions(AbstractCommand command, User user, SlashCommandEvent event) {
+    @Contract(value = "_, _, _ -> new", pure = true)
+    public static @NotNull CommandResult<Void> noPermissions(AbstractCommand command, User user, SlashCommandEvent event) {
         return new CommandResult<>(CommandResultType.NO_PERMISSIONS, null, command, user, event);
     }
 
-    public static CommandResult<?> unknown() {
+    @Contract(value = " -> new", pure = true)
+    public static @NotNull CommandResult<Void> unknown() {
         return new CommandResult<>(CommandResultType.UNKNOWN, null);
     }
 
-    public static CommandResult<?> unknown(AbstractCommand command, User user, SlashCommandEvent event) {
+    @Contract(value = "_, _, _ -> new", pure = true)
+    public static @NotNull CommandResult<Void> unknown(AbstractCommand command, User user, SlashCommandEvent event) {
         return new CommandResult<>(CommandResultType.UNKNOWN, null, command, user, event);
+    }
+
+    @Contract(value = "_ -> new", pure = true)
+    public static <T> @NotNull CommandResult<T> dynamic(T hint) {
+        return new CommandResult<>(CommandResultType.DYNAMIC, hint);
+    }
+
+    @Contract(value = "_, _, _, _ -> new", pure = true)
+    public static <T> @NotNull CommandResult<T> dynamic(AbstractCommand command, T hint, User user, SlashCommandEvent event) {
+        return new CommandResult<>(CommandResultType.DYNAMIC, null, command, user, event);
     }
 
     public void setCommand(Command command) {

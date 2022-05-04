@@ -17,7 +17,8 @@ import java.nio.file.Paths;
 public class MessageContainer {
 
     private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-    private static final String CONFIGURATION_FILE = "./commands.json";
+
+    private static final String DEFAULT_CONFIGURATION_FILE = "./commands.json";
 
     private String noPermissionMessage;
     private String errorMessage;
@@ -25,43 +26,12 @@ public class MessageContainer {
     private boolean noPermissionMessageEnabled;
     private boolean errorMessageEnabled;
 
-    public MessageContainer(String noPermissionMessage, String errorMessage,
-                            boolean noPermissionMessageEnabled, boolean errorMessageEnabled) {
+    private MessageContainer(String noPermissionMessage, String errorMessage,
+                             boolean noPermissionMessageEnabled, boolean errorMessageEnabled) {
         this.noPermissionMessage = noPermissionMessage;
         this.errorMessage = errorMessage;
         this.noPermissionMessageEnabled = noPermissionMessageEnabled;
         this.errorMessageEnabled = errorMessageEnabled;
-    }
-
-    public static MessageContainer fromFile() {
-        File file = new File(CONFIGURATION_FILE);
-
-        if (!file.exists()) {
-            InputStream stream = MessageContainer.class.getResourceAsStream(CONFIGURATION_FILE);
-
-            if (stream == null) {
-                throw new NullPointerException("Could not create a MessageContainer from the Configuration File because it does not exist");
-            }
-
-            try {
-                Files.copy(stream, Paths.get("./"));
-            } catch (IOException e) {
-                logger.atSevere().withCause(e).log("Could not copy Configuration File outside");
-                return null;
-            }
-        }
-
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(MessageContainer.class, new ConfigurationTypeAdapter())
-                .create();
-
-        try {
-            return gson.fromJson(new FileReader(CONFIGURATION_FILE), MessageContainer.class);
-        } catch (FileNotFoundException e) {
-            logger.atSevere().withCause(e).log("Could not parse 'commands.json' because it does not exist.");
-        }
-
-        return null;
     }
 
     public void setErrorMessageEnabled(boolean errorMessageEnabled) {
@@ -94,5 +64,53 @@ public class MessageContainer {
 
     public String getNoPermissionMessage() {
         return noPermissionMessage;
+    }
+
+    /*
+     * STATIC FACTORY METHODS
+     * */
+
+    public static MessageContainer create(String errorMessage, String noPermissionMessage) {
+        return new MessageContainer(noPermissionMessage, errorMessage,
+                noPermissionMessage != null, errorMessage != null);
+    }
+
+    public static MessageContainer fromFile(File file) {
+        if (!file.exists()) {
+            throw new IllegalArgumentException("Could not find file '" + file.getName() + "'");
+        }
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(MessageContainer.class, new ConfigurationTypeAdapter())
+                .create();
+
+        try {
+            return gson.fromJson(new FileReader(file), MessageContainer.class);
+        } catch (FileNotFoundException e) {
+            logger.atSevere().withCause(e).log("Could not parse '" + file.getName() + "' because it does not exist.");
+        }
+
+        return null;
+    }
+
+    public static MessageContainer fromDefaultConfiguration() {
+        File file = new File(DEFAULT_CONFIGURATION_FILE);
+
+        if (!file.exists()) {
+            InputStream stream = MessageContainer.class.getResourceAsStream(DEFAULT_CONFIGURATION_FILE);
+
+            if (stream == null) {
+                throw new NullPointerException("Could not create a MessageContainer from the Configuration File because it does not exist");
+            }
+
+            try {
+                Files.copy(stream, Paths.get("./"));
+            } catch (IOException e) {
+                logger.atSevere().withCause(e).log("Could not copy Configuration File outside");
+                return null;
+            }
+        }
+
+        return fromFile(file);
     }
 }

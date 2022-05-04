@@ -6,21 +6,31 @@ Created 09.01.2022 - 22:33
 
 package xyz.cronixzero.sapota.commands;
 
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import xyz.cronixzero.sapota.commands.messaging.MessageContainer;
 import xyz.cronixzero.sapota.commands.result.CommandResult;
 
 public interface CommandHandler {
 
-    void registerCommand(Command command);
+    Command registerCommand(Command command);
 
-    CommandResult<?> dispatchCommand(String command);
+    void flushCommands(JDA bot);
 
-    CommandResult<?> dispatchSubCommand(String command, String subCommand);
+    void flushCommands(Guild guild);
 
-    // SubCommands + Commands
-    CommandResult<?> dispatchCommand(AbstractCommand command);
+    CommandResult<?> dispatchCommand(String command, User user, SlashCommandEvent event);
+
+    CommandResult<?> dispatchSubCommand(String command, String subCommand, User user, SlashCommandEvent event);
+
+    CommandResult<?> dispatchSubCommand(String command, String subCommandGroup, String subCommand, User user, SlashCommandEvent event);
 
     Command getCommand(String command);
 
-    SubCommand getSubCommand(String command, String subCommand);
+    SubCommandRegistry.SubCommandInfo getSubCommandInfo(String command, String subCommand);
+
+    MessageContainer getMessageContainer();
 
 }
