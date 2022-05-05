@@ -12,7 +12,7 @@ JCDL is seperated into SubProjects:
 ## Discord Bot Driver
 ### Gradle
 ```
-implementation 'xyz.cronixzero.sapota:discord-botdriver:1.0.0'
+implementation 'xyz.cronixzero.sapota:discord-botdriver:1.1.0'
 ```
 
 ### Maven
@@ -20,14 +20,14 @@ implementation 'xyz.cronixzero.sapota:discord-botdriver:1.0.0'
 <dependency>
   <groupId>xyz.cronixzero.sapota</groupId>
   <artifactId>discord-botdriver</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
 ## Discord Presence
 ### Gradle
 ```
-implementation 'xyz.cronixzero.sapota:discord-presence:1.0.0'
+implementation 'xyz.cronixzero.sapota:discord-presence:1.1.0'
 ```
 
 ### Maven
@@ -35,6 +35,21 @@ implementation 'xyz.cronixzero.sapota:discord-presence:1.0.0'
 <dependency>
   <groupId>xyz.cronixzero.sapota</groupId>
   <artifactId>discord-presence</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
+</dependency>
+```
+
+## Discord Commands
+### Gradle
+```
+implementation 'xyz.cronixzero.sapota:discord-commands:1.1.0'
+```
+
+### Maven
+```
+<dependency>
+  <groupId>xyz.cronixzero.sapota</groupId>
+  <artifactId>discord-commands</artifactId>
+  <version>1.1.0</version>
 </dependency>
 ```
