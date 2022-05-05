@@ -8,12 +8,12 @@ package xyz.cronixzero.sapota.commands;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.jetbrains.annotations.ApiStatus;
 import xyz.cronixzero.sapota.commands.messaging.MessageContainer;
 import xyz.cronixzero.sapota.commands.result.CommandResponseHandler;
 import xyz.cronixzero.sapota.commands.result.CommandResult;
+import xyz.cronixzero.sapota.commands.user.CommandUser;
 
 import java.util.Collection;
 
@@ -46,13 +46,13 @@ public interface CommandHandler {
     void flushCommands(Guild guild);
 
     @ApiStatus.Internal
-    CommandResult<?> dispatchCommand(String command, User user, SlashCommandEvent event);
+    CommandResult<?> dispatchCommand(String command, CommandUser user, SlashCommandEvent event);
 
     @ApiStatus.Internal
-    CommandResult<?> dispatchSubCommand(String command, String subCommand, User user, SlashCommandEvent event);
+    CommandResult<?> dispatchSubCommand(String command, String subCommand, CommandUser user, SlashCommandEvent event);
 
     @ApiStatus.Internal
-    CommandResult<?> dispatchSubCommand(String command, String subCommandGroup, String subCommand, User user, SlashCommandEvent event);
+    CommandResult<?> dispatchSubCommand(String command, String subCommandGroup, String subCommand, CommandUser user, SlashCommandEvent event);
 
     Command getCommand(String command);
 

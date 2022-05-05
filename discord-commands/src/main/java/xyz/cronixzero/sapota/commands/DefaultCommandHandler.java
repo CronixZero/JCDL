@@ -8,8 +8,8 @@ package xyz.cronixzero.sapota.commands;
 
 import com.google.common.flogger.FluentLogger;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.jetbrains.annotations.ApiStatus;
@@ -18,6 +18,7 @@ import xyz.cronixzero.sapota.commands.messaging.MessageContainer;
 import xyz.cronixzero.sapota.commands.result.CommandResponseHandler;
 import xyz.cronixzero.sapota.commands.result.CommandResult;
 import xyz.cronixzero.sapota.commands.result.CommandResultType;
+import xyz.cronixzero.sapota.commands.user.CommandUser;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -103,9 +104,23 @@ public class DefaultCommandHandler implements CommandHandler {
 
     @ApiStatus.Internal
     @Override
-    public CommandResult<?> dispatchCommand(String commandName, User user, SlashCommandEvent event) {
+    public CommandResult<?> dispatchCommand(String commandName, CommandUser user, SlashCommandEvent event) {
         Command command = commands.get(commandName);
-        CommandResult<?> result = command.onCommand(user, event);
+        boolean isOnGuild = user.getMember() != null;
+        CommandResult<?> result = null;
+
+        if (isOnGuild) {
+            if(command.getPermission() != null && !user.getMember().hasPermission(command.getPermission())) {
+                return CommandResult.noPermissions(command, user, event);
+            }
+
+            result = command.onGuildCommand(user.getMember(), event);
+        }
+
+        if (result == null || (result.getType() == CommandResultType.DYNAMIC && result.getHint().equals("Unused"))) {
+            result = command.onCommand(user.getUser(), event);
+        }
+        event.deferReply().queue();
 
         Method handler = command.getResponseHandlers().get(result.getType());
         try {
@@ -121,7 +136,7 @@ public class DefaultCommandHandler implements CommandHandler {
 
     @ApiStatus.Internal
     @Override
-    public CommandResult<?> dispatchSubCommand(String commandName, String subCommandName, User user, SlashCommandEvent event) {
+    public CommandResult<?> dispatchSubCommand(String commandName, String subCommandName, CommandUser user, SlashCommandEvent event) {
         Command command = commands.get(commandName);
         SubCommandRegistry subCommandRegistry = command.getSubCommandRegistry();
 
@@ -133,6 +148,12 @@ public class DefaultCommandHandler implements CommandHandler {
         if (subCommandInfo == null)
             throw new IllegalArgumentException("There is no SubCommand " + subCommandName + " associated with " + commandName);
 
+        if(user.getMember() != null
+                && subCommandInfo.getSubCommand().permission() != Permission.UNKNOWN
+                && !user.getMember().hasPermission(subCommandInfo.getSubCommand().permission())) {
+            return CommandResult.noPermissions(command, user, event);
+        }
+
         Method subCommandMethod = subCommandInfo.getCommandMethod();
         try {
             CommandResult<?> result;
@@ -140,6 +161,7 @@ public class DefaultCommandHandler implements CommandHandler {
                 result = (CommandResult<?>) subCommandMethod.invoke(command, event);
             else
                 result = (CommandResult<?>) subCommandMethod.invoke(command, user, event);
+            event.deferReply().queue();
 
             if (result == null)
                 return CommandResult.success(command, user, event);
@@ -158,7 +180,7 @@ public class DefaultCommandHandler implements CommandHandler {
 
     @ApiStatus.Internal
     @Override
-    public CommandResult<?> dispatchSubCommand(String command, String subCommandGroup, String subCommand, User user, SlashCommandEvent event) {
+    public CommandResult<?> dispatchSubCommand(String command, String subCommandGroup, String subCommand, CommandUser user, SlashCommandEvent event) {
         return dispatchSubCommand(command, subCommandGroup + "/" + subCommand, user, event);
     }
 

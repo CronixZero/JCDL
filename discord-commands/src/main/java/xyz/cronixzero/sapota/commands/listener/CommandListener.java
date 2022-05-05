@@ -2,13 +2,13 @@ package xyz.cronixzero.sapota.commands.listener;
 
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import xyz.cronixzero.sapota.commands.CommandHandler;
 import xyz.cronixzero.sapota.commands.messaging.MessageContainer;
 import xyz.cronixzero.sapota.commands.result.CommandResult;
+import xyz.cronixzero.sapota.commands.user.CommandUser;
 
 public class CommandListener extends ListenerAdapter {
 
@@ -20,11 +20,13 @@ public class CommandListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(@NotNull SlashCommandEvent event) {
-        User user = event.getUser();
+        CommandUser user = new CommandUser(event.getUser(), event.getMember());
         String command = event.getName();
         String group = event.getSubcommandGroup();
         String sub = event.getSubcommandName();
         CommandResult<?> result;
+
+        event.getMember();
 
         // Execute the Commands
         if (sub == null) {
@@ -43,16 +45,16 @@ public class CommandListener extends ListenerAdapter {
         switch (result.getType()) {
             case ERROR:
                 if (messages.isErrorMessageEnabled()) {
-                    Message message = new MessageBuilder(String.format(messages.getErrorMessage(), user.getAsMention()))
-                            .build();
+                    Message message = new MessageBuilder(String.format(messages.getErrorMessage(),
+                            user.getUser().getAsMention())).build();
                     event.reply(message).queue();
                 }
                 break;
 
             case NO_PERMISSIONS:
                 if (messages.isNoPermissionMessageEnabled()) {
-                    Message message = new MessageBuilder(String.format(messages.getNoPermissionMessage(), user.getAsMention()))
-                            .build();
+                    Message message = new MessageBuilder(String.format(messages.getNoPermissionMessage(),
+                            user.getUser().getAsMention())).build();
                     event.reply(message).queue();
                 }
                 break;

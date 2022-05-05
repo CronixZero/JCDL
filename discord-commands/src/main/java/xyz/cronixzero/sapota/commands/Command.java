@@ -7,6 +7,7 @@ Created 09.01.2022 - 18:42
 package xyz.cronixzero.sapota.commands;
 
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -16,6 +17,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 import org.jetbrains.annotations.ApiStatus;
 import xyz.cronixzero.sapota.commands.result.CommandResult;
 import xyz.cronixzero.sapota.commands.result.CommandResultType;
+import xyz.cronixzero.sapota.commands.user.CommandUser;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -60,12 +62,20 @@ public abstract class Command {
 
     /**
      * Command Method for Commands without SubCommands
+     * Note that using this Method will not check for Permissions
      *
      * @param user  The executing User
      * @param event The Event that belongs to this Command Execution
      */
     protected CommandResult<?> onCommand(User user, SlashCommandEvent event) {
-        return CommandResult.unknown(this, user, event);
+        return CommandResult.unknown(this, new CommandUser(user), event);
+    }
+
+    /**
+     * Command Method for Commands without SubCommands that can only be executed in Guilds
+     * */
+    protected CommandResult<?> onGuildCommand(Member member, SlashCommandEvent event) {
+        return CommandResult.dynamic("Unused", this, new CommandUser(member.getUser(), member), event);
     }
 
     /**
