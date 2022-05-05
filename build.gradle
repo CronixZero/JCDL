@@ -39,18 +39,21 @@ subprojects {
 
     dependencies {
         // JDA
-        implementation("net.dv8tion:JDA:4.3.0_334") {
+        implementation("net.dv8tion:JDA:4.4.0_350") {
             exclude module: 'opus-java'
         }
 
         // Json
-        implementation 'com.google.code.gson:gson:2.8.9'
+        implementation 'com.google.code.gson:gson:2.9.0'
 
         // Guava
-        implementation("com.google.guava:guava:31.0.1-jre")
+        implementation("com.google.guava:guava:31.1-jre")
+
+        // JetBrains Annotations
+        compileOnly 'org.jetbrains:annotations:23.0.0'
 
         // Logging
-        implementation 'com.google.flogger:flogger:0.7.1'
-        runtimeOnly 'com.google.flogger:flogger-system-backend:0.7.1'
+        implementation 'com.google.flogger:flogger:0.7.4'
+        runtimeOnly 'com.google.flogger:flogger-system-backend:0.7.4'
     }
 }

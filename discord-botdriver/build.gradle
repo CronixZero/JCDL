@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     implementation project(":discord-presence")
+    implementation project(":discord-commands")
 }
 
 java {
@@ -30,9 +31,9 @@ publishing {
         mavenJava(MavenPublication) {
             from(components.java)
             pom {
-                name = 'Sapota Discord Bot Driver'
-                description = 'Bot Driver helps to start Discord Bots and manages common features for developers'
-                url = 'https://github.com/CronixZero/Sapota'
+                name = 'Java Common Discord BotDriver'
+                description = 'BotDriver starts your Bot with everything you need to start shipping faster'
+                url = 'https://github.com/CronixZero/JCDL'
                 inceptionYear = '2021'
                 licenses {
                     license {
@@ -47,9 +48,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:https://github.com/CronixZero/Sapota.git'
-                    developerConnection = 'scm:git@github.com:CronixZero/Sapota.git'
-                    url = 'https://github.com/CronixZero/Sapota'
+                    connection = 'scm:https://github.com/CronixZero/JCDL.git'
+                    developerConnection = 'scm:git@github.com:CronixZero/JCDL.git'
+                    url = 'https://github.com/CronixZero/JCDL'
                 }
             }
         }

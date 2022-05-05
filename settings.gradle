@@ -1,3 +1,5 @@
 rootProject.name = 'sapota'
 include 'discord-botdriver'
 include 'discord-presence'
+include 'discord-commands'
+

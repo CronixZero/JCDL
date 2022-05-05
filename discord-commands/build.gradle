@@ -21,8 +21,8 @@ publishing {
         mavenJava(MavenPublication) {
             from(components.java)
             pom {
-                name = 'Java Common Discord Presence'
-                description = 'Make managing your Discord Bot Presence as simple as writing into a json document'
+                name = 'Java Common Discord CommandFramework'
+                description = 'Create Commands faster and simpler than ever'
                 url = 'https://github.com/CronixZero/JCDL'
                 inceptionYear = '2021'
                 licenses {
@@ -53,4 +53,3 @@ signing {
     sign publishing.publications.mavenJava
     sign configurations.archives
 }
-

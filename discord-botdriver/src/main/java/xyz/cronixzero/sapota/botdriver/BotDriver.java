@@ -7,10 +7,13 @@ Created 18.10.2021 - 21:06
 package xyz.cronixzero.sapota.botdriver;
 
 import net.dv8tion.jda.api.JDA;
+import org.jetbrains.annotations.ApiStatus;
+import xyz.cronixzero.sapota.commands.CommandHandler;
 
 public abstract class BotDriver {
 
     private BotDescription description;
+    private CommandHandler commandHandler;
     private JDA bot;
 
     /**
@@ -32,9 +35,17 @@ public abstract class BotDriver {
     }
 
     /**
-     * @deprecated Only for internal uses
+     * This method is called when the Application Commands are getting constructed and send to Discord
+     *
+     * @param handler The CommandHandler to register the commands at
+     * @see CommandHandler
+     * @see xyz.cronixzero.sapota.commands.Command
+     * @see xyz.cronixzero.sapota.commands.DefaultCommandHandler
      */
-    @Deprecated
+    public void registerCommands(CommandHandler handler) {
+    }
+
+    @ApiStatus.Internal
     public void setBot(JDA bot) {
         if (this.bot != null)
             throw new IllegalStateException("JDA Bot Instance can only be set once");
@@ -42,8 +53,14 @@ public abstract class BotDriver {
         this.bot = bot;
     }
 
+    @ApiStatus.Internal
     public void setDescription(BotDescription description) {
         this.description = description;
+    }
+
+    @ApiStatus.Internal
+    public void setCommandHandler(CommandHandler commandHandler) {
+        this.commandHandler = commandHandler;
     }
 
     public JDA getBot() {
@@ -52,5 +69,9 @@ public abstract class BotDriver {
 
     public BotDescription getDescription() {
         return description;
+    }
+
+    public CommandHandler getCommandHandler() {
+        return commandHandler;
     }
 }

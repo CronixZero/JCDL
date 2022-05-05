@@ -9,6 +9,9 @@ package xyz.cronixzero.sapota.botdriver;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import xyz.cronixzero.sapota.commands.CommandHandler;
+import xyz.cronixzero.sapota.commands.DefaultCommandHandler;
+import xyz.cronixzero.sapota.commands.messaging.MessageContainer;
 import xyz.cronixzero.sapota.presence.PresenceApi;
 import xyz.cronixzero.sapota.presence.PresenceTask;
 import net.dv8tion.jda.api.JDA;
@@ -129,6 +132,10 @@ public class BotDriverBootstrap {
         }
 
         driver.onStart(bot);
-    }
 
+        CommandHandler commandHandler = new DefaultCommandHandler(MessageContainer.fromDefaultConfiguration());
+        driver.setCommandHandler(commandHandler);
+        driver.registerCommands(commandHandler);
+        commandHandler.flushCommands(bot);
+    }
 }

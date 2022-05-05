@@ -1,0 +1,4 @@
+{
+  "noPermissionMessage": "%s, You do not have enough Permissions to perform this Command!",
+  "errorMessage": "%s, An Error occurred. Please report this to the Owner of the Bot"
+}
