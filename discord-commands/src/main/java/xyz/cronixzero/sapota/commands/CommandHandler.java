@@ -54,12 +54,27 @@ public interface CommandHandler {
     @ApiStatus.Internal
     CommandResult<?> dispatchSubCommand(String command, String subCommandGroup, String subCommand, CommandUser user, SlashCommandEvent event);
 
+    /**
+     * @param command The Name of the Command
+     * @return The {@link Command} referenced with the CommandName
+     */
     Command getCommand(String command);
 
+    /**
+     * Get every Information about a SubCommand
+     *
+     * @return An Instance of {@link xyz.cronixzero.sapota.commands.SubCommandRegistry.SubCommandInfo} containing the desired SubCommand
+     * */
     SubCommandRegistry.SubCommandInfo getSubCommandInfo(String command, String subCommand);
 
+    /**
+     * @return All registered Commands
+     * */
     Collection<Command> getCommands();
 
+    /**
+    * @return A {@link MessageContainer} Instance
+    * */
     MessageContainer getMessageContainer();
 
 }
