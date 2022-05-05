@@ -47,7 +47,7 @@ subprojects {
         implementation 'com.google.code.gson:gson:2.8.9'
 
         // Guava
-        implementation("com.google.guava:guava:31.0.1-jre")
+        implementation("com.google.guava:guava:31.1-jre")
 
         // Logging
         implementation 'com.google.flogger:flogger:0.7.1'
