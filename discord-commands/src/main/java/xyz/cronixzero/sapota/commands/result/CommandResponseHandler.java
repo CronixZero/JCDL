@@ -10,13 +10,8 @@ import java.lang.annotation.*;
 
 /**
  * This Annotation defines a Method as a ResponseHandler.
- * <p>
- * <pre>{@code
- *      @CommandResponseHandler(type = CommandResultType.SUCCESS) // or any other Type
- *      public void onResponse(CommandResult<?> result) {
- *          System.out.println("Received Result of Type SUCCESS");
- *      }
- * }</pre>
+ * <p></p>
+ * Examples on <a href="https://github.com/CronixZero/JCDL/wiki">GitHub</a>
  *
  * @see xyz.cronixzero.sapota.commands.Command
  */

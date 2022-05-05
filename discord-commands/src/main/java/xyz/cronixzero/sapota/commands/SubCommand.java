@@ -15,41 +15,7 @@ import java.lang.annotation.*;
  * There are multiple ways how a Method with this Annotation might look
  * If {@code null} or nothing is returned, it will be defaulted to SUCCESS
  * <p>
- * The 4 possible ways are covered below:
- * <p>
- * Without Result; Without User Argument
- * <pre>{@code
- *   @SubCommand(name = "hello", description = "Let me greet the World!")
- *   public void onSubCommand(SlashCommandEvent event) {
- *      event.reply("Hello World!").queue();
- *   }
- * }</pre>
- * <p>
- * Without Result; With User Argument
- * <pre>{@code
- *   @SubCommand(name = "hello", description = "Let me greet the World!")
- *   public void onSubCommand(User user, SlashCommandEvent event) {
- *      event.reply("Hello World!").queue();
- *   }
- * }</pre>
- * <p>
- * With Result; Without User Argument
- * <pre>{@code
- *   @SubCommand(name = "hello", description = "Let me greet the World!")
- *   public CommandResult<?> onSubCommand(SlashCommandEvent event) {
- *      event.reply("Hello World!").queue();
- *      return CommandResult.success(this, user, event);
- *   }
- * }</pre>
- * <p>
- * With Result; With User Argument
- * <pre>{@code
- *   @SubCommand(name = "hello", description = "Let me greet the World!")
- *   public CommandResult<?> onSubCommand(User user, SlashCommandEvent event) {
- *      event.reply("Hello World!").queue();
- *      return CommandResult.success(this, user, event);
- *   }
- * }</pre>
+ * Examples on <a href="https://github.com/CronixZero/JCDL/wiki">GitHub</a>
  */
 @Documented
 @Target(ElementType.METHOD)
