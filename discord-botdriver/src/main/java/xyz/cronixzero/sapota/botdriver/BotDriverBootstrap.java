@@ -136,5 +136,6 @@ public class BotDriverBootstrap {
         CommandHandler commandHandler = new DefaultCommandHandler(MessageContainer.fromDefaultConfiguration());
         driver.setCommandHandler(commandHandler);
         driver.registerCommands(commandHandler);
+        commandHandler.flushCommands(bot);
     }
 }
