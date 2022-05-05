@@ -85,7 +85,6 @@ public abstract class Command {
      * @see xyz.cronixzero.sapota.commands.result.CommandResponseHandler
      */
     public void onError(CommandResult<? extends Throwable> e) {
-
     }
 
     /**
