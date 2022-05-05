@@ -36,6 +36,38 @@ public class CommandResult<E> {
         this.event = event;
     }
 
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
+    public void setEvent(SlashCommandEvent event) {
+        this.event = event;
+    }
+
+    public void setUser(CommandUser user) {
+        this.user = user;
+    }
+
+    public E getHint() {
+        return hint;
+    }
+
+    public CommandResultType getType() {
+        return type;
+    }
+
+    public CommandUser getUser() {
+        return user;
+    }
+
+    public Command getCommand() {
+        return command;
+    }
+
+    public SlashCommandEvent getEvent() {
+        return event;
+    }
+
     /////////////////////////////////////////////////////
     /////////////////////// ERROR ///////////////////////
     /////////////////////////////////////////////////////
@@ -369,37 +401,5 @@ public class CommandResult<E> {
     @Contract(value = "_, _, _, _ -> new", pure = true)
     public static <T> @NotNull CommandResult<T> dynamic(T hint, Command command, Member member, SlashCommandEvent event) {
         return dynamic(hint, command, new CommandUser(member), event);
-    }
-
-    public void setCommand(Command command) {
-        this.command = command;
-    }
-
-    public void setEvent(SlashCommandEvent event) {
-        this.event = event;
-    }
-
-    public void setUser(CommandUser user) {
-        this.user = user;
-    }
-
-    public E getHint() {
-        return hint;
-    }
-
-    public CommandResultType getType() {
-        return type;
-    }
-
-    public CommandUser getUser() {
-        return user;
-    }
-
-    public Command getCommand() {
-        return command;
-    }
-
-    public SlashCommandEvent getEvent() {
-        return event;
     }
 }
