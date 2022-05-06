@@ -95,17 +95,6 @@ public class BotDriverBootstrap {
         prepareBot(driver);
     }
 
-    private static void sendGreetings() {
-        String greetingTitle = "\n" +
-                " ____   ____  ___   ___  _____  ____  ____     ____  _____  ____    ____   ____  ____  _  _  ____  ____ \n" +
-                "(  _ \\ (_  _)/ __) / __)(  _  )(  _ \\(  _ \\   (  _ \\(  _  )(_  _)  (  _ \\ (  _ \\(_  _)( \\/ )( ___)(  _ \\\n" +
-                " )(_) ) _)(_ \\__ \\( (__  )(_)(  )   / )(_) )   ) _ < )(_)(   )(     )(_) ) )   / _)(_  \\  /  )__)  )   /\n" +
-                "(____/ (____)(___/ \\___)(_____)(_)\\_)(____/   (____/(_____) (__)   (____/ (_)\\_)(____)  \\/  (____)(_)\\_)\n";
-        String greetingDescription = "Starting this bot using Discord Bot Driver ${version} by CronixZero!\n\n";
-
-        logger.atInfo().log(greetingTitle + greetingDescription);
-    }
-
     private static void prepareBot(BotDriver driver) {
         JDABuilder botBuilder = JDABuilder.createDefault(driver.getDescription().getToken());
         JDA bot;
@@ -137,5 +126,16 @@ public class BotDriverBootstrap {
         driver.setCommandHandler(commandHandler);
         driver.registerCommands(commandHandler);
         commandHandler.flushCommands(bot);
+    }
+
+    private static void sendGreetings() {
+        String greetingTitle = "\n" +
+                " ____   ____  ___   ___  _____  ____  ____     ____  _____  ____    ____   ____  ____  _  _  ____  ____ \n" +
+                "(  _ \\ (_  _)/ __) / __)(  _  )(  _ \\(  _ \\   (  _ \\(  _  )(_  _)  (  _ \\ (  _ \\(_  _)( \\/ )( ___)(  _ \\\n" +
+                " )(_) ) _)(_ \\__ \\( (__  )(_)(  )   / )(_) )   ) _ < )(_)(   )(     )(_) ) )   / _)(_  \\  /  )__)  )   /\n" +
+                "(____/ (____)(___/ \\___)(_____)(_)\\_)(____/   (____/(_____) (__)   (____/ (_)\\_)(____)  \\/  (____)(_)\\_)\n";
+        String greetingDescription = "Starting this bot using Discord Bot Driver ${version} by CronixZero!\n\n";
+
+        logger.atInfo().log(greetingTitle + greetingDescription);
     }
 }
