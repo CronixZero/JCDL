@@ -9,19 +9,28 @@ package xyz.cronixzero.sapota.botdriver;
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import xyz.cronixzero.sapota.commands.CommandHandler;
 import xyz.cronixzero.sapota.commands.DefaultCommandHandler;
 import xyz.cronixzero.sapota.commands.messaging.MessageContainer;
 import xyz.cronixzero.sapota.presence.PresenceApi;
 import xyz.cronixzero.sapota.presence.PresenceTask;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 
 import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BotDriverBootstrap {
 
@@ -29,6 +38,15 @@ public class BotDriverBootstrap {
 
     public static void main(String[] args) {
         sendGreetings();
+
+        try {
+            prepareLibraries();
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not prepare Files for Bootstrap");
+            return;
+        }
+
+        loadLibraries();
 
         File configuration = new File("./bot_driver.json");
         BotDescription description;
@@ -95,6 +113,54 @@ public class BotDriverBootstrap {
         prepareBot(driver);
     }
 
+    private static void prepareLibraries() throws IOException {
+        Files.createDirectory(Paths.get("libs"));
+
+        Map<String, String> dependantLibs = new HashMap<>();
+
+        dependantLibs.put("discord-commands.jar", "https://repo1.maven.org/maven2/xyz/cronixzero/sapota/discord-commands/1.1.0/discord-commands-1.1.0.jar");
+        dependantLibs.put("discord-presence.jar", "https://repo1.maven.org/maven2/xyz/cronixzero/sapota/discord-presence/1.1.0/discord-presence-1.1.0.jar");
+
+        for(Map.Entry<String, String> e : dependantLibs.entrySet()) {
+            try (InputStream in = new URL(e.getValue()).openStream()) {
+                Files.copy(in, Paths.get("libs", e.getKey()), StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+    }
+
+    private static void loadLibraries() {
+        File[] libs = new File("./libs").listFiles();
+        Method addMethod;
+
+        if (libs == null)
+            return;
+
+        try {
+            addMethod = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+            addMethod.setAccessible(true);
+        } catch (NoSuchMethodException e) {
+            logger.atSevere().withCause(e).log("Could not load Libraries");
+            return;
+        }
+
+        for (File file : libs) {
+            if (!file.getName().endsWith(".jar")) {
+                return;
+            }
+
+            try {
+                URL url = file.toURI().toURL();
+
+                logger.atInfo().log("Loading Library %s", file.getName());
+                addMethod.invoke(Thread.currentThread().getContextClassLoader(), url);
+            } catch (MalformedURLException e) {
+                logger.atSevere().withCause(e).log("Could not form URL for Library");
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                logger.atSevere().withCause(e).log("Could not load the Libraries");
+            }
+        }
+    }
+
     private static void prepareBot(BotDriver driver) {
         JDABuilder botBuilder = JDABuilder.createDefault(driver.getDescription().getToken());
         JDA bot;
@@ -136,6 +202,6 @@ public class BotDriverBootstrap {
                 "(____/ (____)(___/ \\___)(_____)(_)\\_)(____/   (____/(_____) (__)   (____/ (_)\\_)(____)  \\/  (____)(_)\\_)\n";
         String greetingDescription = "Starting this bot using Discord Bot Driver ${version} by CronixZero!\n\n";
 
-        logger.atInfo().log(greetingTitle + greetingDescription);
+        Logger.getLogger("Greeting").log(Level.INFO, () -> greetingTitle + greetingDescription);
     }
 }
