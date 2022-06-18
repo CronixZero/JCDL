@@ -50,7 +50,7 @@ public class CommandListener extends ListenerAdapter {
 
         switch (result.getType()) {
             case SUCCESS:
-                if (result.getCommand() != null) {
+                if (result.getCommand() == null || commandSuccessAction == null) {
                     break;
                 }
 
