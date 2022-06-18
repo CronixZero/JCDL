@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 /**
  * This Class contains Messages that will be sent to {@link net.dv8tion.jda.api.entities.User}s in case of an Error
  * or an NoPermission {@link xyz.cronixzero.sapota.commands.result.CommandResult}
- * */
+ */
 public class MessageContainer {
 
     private static final FluentLogger logger = FluentLogger.forEnclosingClass();
@@ -26,14 +26,16 @@ public class MessageContainer {
 
     private String noPermissionMessage;
     private String errorMessage;
+    private String wrongChannelType;
 
     private boolean noPermissionMessageEnabled;
     private boolean errorMessageEnabled;
 
-    private MessageContainer(String noPermissionMessage, String errorMessage,
+    private MessageContainer(String noPermissionMessage, String errorMessage, String wrongChannelType,
                              boolean noPermissionMessageEnabled, boolean errorMessageEnabled) {
         this.noPermissionMessage = noPermissionMessage;
         this.errorMessage = errorMessage;
+        this.wrongChannelType = wrongChannelType;
         this.noPermissionMessageEnabled = noPermissionMessageEnabled;
         this.errorMessageEnabled = errorMessageEnabled;
     }
@@ -54,6 +56,10 @@ public class MessageContainer {
         this.errorMessage = errorMessage;
     }
 
+    public void setWrongChannelType(String wrongChannelType) {
+        this.wrongChannelType = wrongChannelType;
+    }
+
     public boolean isNoPermissionMessageEnabled() {
         return noPermissionMessageEnabled;
     }
@@ -70,12 +76,19 @@ public class MessageContainer {
         return noPermissionMessage;
     }
 
+    public String getWrongChannelType() {
+        return wrongChannelType;
+    }
+
     /*
      * STATIC FACTORY METHODS
      * */
 
-    public static MessageContainer create(String errorMessage, String noPermissionMessage) {
-        return new MessageContainer(noPermissionMessage, errorMessage,
+    public static MessageContainer create(String wrongChannelType, String errorMessage, String noPermissionMessage) {
+        if (wrongChannelType == null)
+            throw new IllegalArgumentException("The Message for the Wrong Channel Type must be set");
+
+        return new MessageContainer(noPermissionMessage, errorMessage, wrongChannelType,
                 noPermissionMessage != null, errorMessage != null);
     }
 

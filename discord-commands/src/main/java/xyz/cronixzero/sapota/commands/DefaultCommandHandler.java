@@ -10,7 +10,7 @@ import com.google.common.flogger.FluentLogger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.jetbrains.annotations.ApiStatus;
 import xyz.cronixzero.sapota.commands.listener.CommandListener;
@@ -24,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.function.Consumer;
 
 public class DefaultCommandHandler implements CommandHandler {
 
@@ -31,6 +32,8 @@ public class DefaultCommandHandler implements CommandHandler {
 
     private final Map<String, Command> commands = new HashMap<>();
     private final MessageContainer messageContainer;
+
+    private Consumer<Command> commandSuccessAction;
 
     public DefaultCommandHandler(MessageContainer messageContainer) {
         this.messageContainer = messageContainer;
@@ -52,6 +55,11 @@ public class DefaultCommandHandler implements CommandHandler {
                 SubCommand subCommand = method.getAnnotation(SubCommand.class);
 
                 subCommandRegistry.registerSubCommand(subCommand, command.getClass());
+            }
+
+            if (method.getName().equals("onGuildCommand")) {
+                command.setGuildCommand(true);
+                logger.atFine().log("Identified %s as a Guild Command", command.getName());
             }
         }
 
@@ -84,6 +92,11 @@ public class DefaultCommandHandler implements CommandHandler {
         flushCommands(guild.updateCommands());
     }
 
+    @Override
+    public void setDefaultCommandSuccessAction(Consumer<Command> action) {
+        commandSuccessAction = action;
+    }
+
     private void flushCommands(CommandListUpdateAction updateAction) {
         for (Command command : commands.values()) {
             try {
@@ -104,17 +117,20 @@ public class DefaultCommandHandler implements CommandHandler {
 
     @ApiStatus.Internal
     @Override
-    public CommandResult<?> dispatchCommand(String commandName, CommandUser user, SlashCommandEvent event) {
+    public CommandResult<?> dispatchCommand(String commandName, CommandUser user, SlashCommandInteractionEvent event) {
         Command command = commands.get(commandName);
         boolean isOnGuild = user.getMember() != null;
         CommandResult<?> result = null;
 
         if (isOnGuild) {
-            if(command.getPermission() != null && !user.getMember().hasPermission(command.getPermission())) {
+            if (command.getPermission() != null && !user.getMember().hasPermission(command.getPermission())) {
                 return CommandResult.noPermissions(command, user, event);
             }
 
             result = command.onGuildCommand(user.getMember(), event);
+        } else if (command.isGuildCommand()) {
+            event.reply(messageContainer.getWrongChannelType()).queue();
+            return CommandResult.wrongChannelType(command, user, event);
         }
 
         if (result == null || (result.getType() == CommandResultType.DYNAMIC && result.getHint().equals("Unused"))) {
@@ -131,12 +147,16 @@ public class DefaultCommandHandler implements CommandHandler {
             result = CommandResult.error(e, command, user, event);
         }
 
+        if (result.getType().equals(CommandResultType.SUCCESS))
+            commandSuccessAction.accept(command);
+
         return result;
     }
 
     @ApiStatus.Internal
     @Override
-    public CommandResult<?> dispatchSubCommand(String commandName, String subCommandName, CommandUser user, SlashCommandEvent event) {
+    public CommandResult<?> dispatchSubCommand(String commandName, String subCommandName,
+                                               CommandUser user, SlashCommandInteractionEvent event) {
         Command command = commands.get(commandName);
         SubCommandRegistry subCommandRegistry = command.getSubCommandRegistry();
 
@@ -148,7 +168,7 @@ public class DefaultCommandHandler implements CommandHandler {
         if (subCommandInfo == null)
             throw new IllegalArgumentException("There is no SubCommand " + subCommandName + " associated with " + commandName);
 
-        if(user.getMember() != null
+        if (user.getMember() != null
                 && subCommandInfo.getSubCommand().permission() != Permission.UNKNOWN
                 && !user.getMember().hasPermission(subCommandInfo.getSubCommand().permission())) {
             return CommandResult.noPermissions(command, user, event);
@@ -180,7 +200,8 @@ public class DefaultCommandHandler implements CommandHandler {
 
     @ApiStatus.Internal
     @Override
-    public CommandResult<?> dispatchSubCommand(String command, String subCommandGroup, String subCommand, CommandUser user, SlashCommandEvent event) {
+    public CommandResult<?> dispatchSubCommand(String command, String subCommandGroup, String subCommand,
+                                               CommandUser user, SlashCommandInteractionEvent event) {
         return dispatchSubCommand(command, subCommandGroup + "/" + subCommand, user, event);
     }
 
@@ -202,5 +223,9 @@ public class DefaultCommandHandler implements CommandHandler {
     @Override
     public MessageContainer getMessageContainer() {
         return messageContainer;
+    }
+
+    public Consumer<Command> getCommandSuccessAction() {
+        return commandSuccessAction;
     }
 }
