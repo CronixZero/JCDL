@@ -5,10 +5,18 @@ plugins {
 }
 
 group 'xyz.cronixzero.sapota'
-version '1.1.0'
+version '2.0.0'
 
 repositories {
     mavenCentral()
+}
+
+dependencies {
+
+    // JDA
+    implementation("net.dv8tion:JDA:5.0.0-alpha.12") {
+        exclude module: 'opus-java'
+    }
 }
 
 java {

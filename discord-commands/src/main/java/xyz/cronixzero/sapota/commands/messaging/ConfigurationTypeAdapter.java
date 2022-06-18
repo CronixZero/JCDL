@@ -26,6 +26,9 @@ public class ConfigurationTypeAdapter extends TypeAdapter<MessageContainer> {
         out.name("errorMessage");
         out.value(value.getErrorMessage());
 
+        out.name("wrongChannelType");
+        out.value(value.getWrongChannelType());
+
         out.endObject();
     }
 
@@ -33,6 +36,7 @@ public class ConfigurationTypeAdapter extends TypeAdapter<MessageContainer> {
     public MessageContainer read(JsonReader in) throws IOException {
         String noPermissionMessage = null;
         String errorMessage = null;
+        String wrongChannelType = null;
 
         in.beginObject();
 
@@ -51,11 +55,18 @@ public class ConfigurationTypeAdapter extends TypeAdapter<MessageContainer> {
                     errorMessage = in.nextString();
                     break;
 
+                case "wrongchanneltype":
+                    wrongChannelType = in.nextString();
+                    break;
+
                 default:
                     break;
             }
         }
 
-        return MessageContainer.create(noPermissionMessage, errorMessage);
+        if(wrongChannelType == null)
+            throw new IllegalArgumentException("The Message for the Wrong Channel Type must be set");
+
+        return MessageContainer.create(noPermissionMessage, errorMessage, wrongChannelType);
     }
 }

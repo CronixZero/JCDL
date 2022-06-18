@@ -9,11 +9,12 @@ package xyz.cronixzero.sapota.commands;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
+import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.jetbrains.annotations.ApiStatus;
 import xyz.cronixzero.sapota.commands.result.CommandResult;
 import xyz.cronixzero.sapota.commands.result.CommandResultType;
@@ -33,6 +34,7 @@ public abstract class Command {
 
     private Permission permission;
     private String[] aliases;
+    private boolean guildCommand = false;
     private Map<CommandResultType, Method> responseHandlers;
     private SubCommandRegistry subCommandRegistry;
 
@@ -67,14 +69,14 @@ public abstract class Command {
      * @param user  The executing User
      * @param event The Event that belongs to this Command Execution
      */
-    protected CommandResult<?> onCommand(User user, SlashCommandEvent event) {
+    protected CommandResult<?> onCommand(User user, SlashCommandInteractionEvent event) {
         return CommandResult.unknown(this, new CommandUser(user), event);
     }
 
     /**
      * Command Method for Commands without SubCommands that can only be executed in Guilds
-     * */
-    protected CommandResult<?> onGuildCommand(Member member, SlashCommandEvent event) {
+     */
+    protected CommandResult<?> onGuildCommand(Member member, SlashCommandInteractionEvent event) {
         return CommandResult.dynamic("Unused", this, new CommandUser(member.getUser(), member), event);
     }
 
@@ -103,6 +105,10 @@ public abstract class Command {
         return description;
     }
 
+    public boolean isGuildCommand() {
+        return guildCommand;
+    }
+
     public Permission getPermission() {
         return permission;
     }
@@ -119,6 +125,11 @@ public abstract class Command {
     @ApiStatus.Internal
     public Map<CommandResultType, Method> getResponseHandlers() {
         return responseHandlers;
+    }
+
+    @ApiStatus.Internal
+    public void setGuildCommand(boolean guildCommand) {
+        this.guildCommand = guildCommand;
     }
 
     @ApiStatus.Internal
@@ -140,7 +151,7 @@ public abstract class Command {
      */
     public CommandData toCommandData() throws NoSuchMethodException, InstantiationException,
             IllegalAccessException, InvocationTargetException {
-        CommandData data = new CommandData(getName(), getDescription());
+        CommandDataImpl data = new CommandDataImpl(getName(), getDescription());
 
         if (getSubCommandRegistry() != null) {
             Map<String, SubcommandGroupData> subcommandGroups = new HashMap<>();
