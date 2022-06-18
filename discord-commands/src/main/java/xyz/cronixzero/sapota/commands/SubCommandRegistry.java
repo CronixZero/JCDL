@@ -18,7 +18,7 @@ public class SubCommandRegistry implements Iterable<SubCommandRegistry.SubComman
 
     @ApiStatus.Internal
     public void registerSubCommand(SubCommand subCommand, Class<? extends Command> commandClass) {
-        String separator = subCommand.subCommandGroup().equals("") ? "/" : "";
+        String separator = subCommand.subCommandGroup().equals("") ? "" : "/";
         String key = subCommand.subCommandGroup() + separator + subCommand.name(); // 'group/sub' or 'sub'
 
         subCommands.put(key, SubCommandInfo.generateInfo(subCommand, commandClass));

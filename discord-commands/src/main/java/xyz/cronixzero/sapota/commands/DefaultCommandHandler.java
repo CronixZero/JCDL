@@ -182,7 +182,6 @@ public class DefaultCommandHandler implements CommandHandler {
                 result = (CommandResult<?>) subCommandMethod.invoke(command, event);
             else
                 result = (CommandResult<?>) subCommandMethod.invoke(command, user, event);
-            event.deferReply().queue();
 
             if (result == null)
                 return CommandResult.success(command, user, event);
