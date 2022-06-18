@@ -40,9 +40,17 @@ implementation 'xyz.cronixzero.sapota:discord-presence:1.1.0'
 ```
 
 ## Discord Commands
+
+| Latest Version 	| Supported JDA Version 	| Continued 	|
+|----------------	|-----------------------	|-----------	|
+| 1.1.0          	| 4.4.X                 	| ❌         	|
+| 2.0.0          	| 5.0.X                 	| ✅         	|
+
+You need to insert the Version for "VERSION"
+
 ### Gradle
 ```
-implementation 'xyz.cronixzero.sapota:discord-commands:1.1.0'
+implementation 'xyz.cronixzero.sapota:discord-commands:VERSION'
 ```
 
 ### Maven
@@ -50,6 +58,6 @@ implementation 'xyz.cronixzero.sapota:discord-commands:1.1.0'
 <dependency>
   <groupId>xyz.cronixzero.sapota</groupId>
   <artifactId>discord-commands</artifactId>
-  <version>1.1.0</version>
+  <version>VERSION</version>
 </dependency>
 ```
