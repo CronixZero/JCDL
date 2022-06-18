@@ -10,6 +10,7 @@ import com.google.common.flogger.FluentLogger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.jetbrains.annotations.ApiStatus;
@@ -44,7 +45,16 @@ public class DefaultCommandHandler implements CommandHandler {
         SubCommandRegistry subCommandRegistry = new SubCommandRegistry();
         Map<CommandResultType, Method> responseHandlers = new EnumMap<>(CommandResultType.class);
 
-        for (Method method : command.getClass().getMethods()) {
+        try {
+            command.getClass().getDeclaredMethod("onGuildCommand", Member.class, SlashCommandInteractionEvent.class);
+
+            command.setGuildCommand(true);
+            logger.atFine().log("Identified %s as a Guild Command", command.getName());
+        } catch (NoSuchMethodException e) {
+            /* DO NOTHING */
+        }
+
+        for (Method method : command.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(CommandResponseHandler.class)) {
                 CommandResponseHandler responseHandler = method.getAnnotation(CommandResponseHandler.class);
 
@@ -55,11 +65,6 @@ public class DefaultCommandHandler implements CommandHandler {
                 SubCommand subCommand = method.getAnnotation(SubCommand.class);
 
                 subCommandRegistry.registerSubCommand(subCommand, command.getClass());
-            }
-
-            if (method.getName().equals("onGuildCommand")) {
-                command.setGuildCommand(true);
-                logger.atFine().log("Identified %s as a Guild Command", command.getName());
             }
         }
 
@@ -136,7 +141,6 @@ public class DefaultCommandHandler implements CommandHandler {
         if (result == null || (result.getType() == CommandResultType.DYNAMIC && result.getHint().equals("Unused"))) {
             result = command.onCommand(user.getUser(), event);
         }
-        event.deferReply().queue();
 
         Method handler = command.getResponseHandlers().get(result.getType());
         try {
@@ -146,9 +150,6 @@ public class DefaultCommandHandler implements CommandHandler {
             logger.atSevere().withCause(e).log("Could not invoke ResponseHandler");
             result = CommandResult.error(e, command, user, event);
         }
-
-        if (result.getType().equals(CommandResultType.SUCCESS))
-            commandSuccessAction.accept(command);
 
         return result;
     }
