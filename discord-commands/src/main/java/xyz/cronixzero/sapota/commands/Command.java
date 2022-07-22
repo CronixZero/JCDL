@@ -20,7 +20,6 @@ import xyz.cronixzero.sapota.commands.user.CommandUser;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -211,7 +210,9 @@ public abstract class Command {
             return data;
         }
 
-        data = commandDataModifier.modify(data);
+        if (commandDataModifier != null) {
+            data = commandDataModifier.modify(data);
+        }
 
         return data;
     }
