@@ -7,6 +7,7 @@ Created 09.01.2022 - 17:25
 package xyz.cronixzero.sapota.commands;
 
 import net.dv8tion.jda.api.Permission;
+import xyz.cronixzero.sapota.commands.modifier.SubCommandDataModifier;
 
 import java.lang.annotation.*;
 
@@ -24,7 +25,7 @@ public @interface SubCommand {
 
     String name();
 
-    Class<? extends CommandOption> options() default CommandOption.class;
+    Class<? extends SubCommandDataModifier> dataModifier() default SubCommandDataModifier.class;
 
     String subCommandGroup() default "";
 

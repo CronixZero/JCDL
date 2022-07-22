@@ -1,4 +1,5 @@
 {
-  "noPermissionMessage": "%s, You do not have enough Permissions to perform this Command!",
-  "errorMessage": "%s, An Error occurred. Please report this to the Owner of the Bot"
+  "noPermissionMessage": "%s, you do not have enough Permissions to perform this Command!",
+  "errorMessage": "%s, an Error occurred. Please report this to the Owner of the Bot",
+  "wrongChannelType": "%s, this Command is Guild Only. Please refrain from using this Command in Direct Messages"
 }

@@ -13,19 +13,23 @@ public enum CommandResultType {
     SUCCESS,
     /**
      * Executed with Error
-     * */
+     */
     ERROR,
     /**
      * User has no Permissions for Command
-     * */
+     */
     NO_PERMISSIONS,
     /**
      * Something unknown happened
-     * */
+     */
     UNKNOWN,
     /**
      * Custom Response
-     * */
-    DYNAMIC
+     */
+    DYNAMIC,
+    /**
+     * User executed Command via Direct Messages, although it's a GuildCommand
+     */
+    WRONG_CHANNEL_TYPE
 
 }
