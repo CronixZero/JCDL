@@ -9,20 +9,17 @@ package xyz.cronixzero.sapota.commands;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.*;
 import org.jetbrains.annotations.ApiStatus;
+import xyz.cronixzero.sapota.commands.modifier.CommandDataModifier;
+import xyz.cronixzero.sapota.commands.modifier.SubCommandDataModifier;
 import xyz.cronixzero.sapota.commands.result.CommandResult;
 import xyz.cronixzero.sapota.commands.result.CommandResultType;
 import xyz.cronixzero.sapota.commands.user.CommandUser;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +30,8 @@ public abstract class Command {
 
     private Permission permission;
     private String[] aliases;
+    private CommandDataModifier commandDataModifier;
+    private boolean guildCommand = false;
     private Map<CommandResultType, Method> responseHandlers;
     private SubCommandRegistry subCommandRegistry;
 
@@ -41,16 +40,36 @@ public abstract class Command {
         this.description = description;
     }
 
+    protected Command(String name, String description, CommandDataModifier modifier) {
+        this.name = name;
+        this.description = description;
+        this.commandDataModifier = modifier;
+    }
+
     protected Command(String name, String description, String... aliases) {
         this.name = name;
         this.description = description;
         this.aliases = aliases;
     }
 
+    protected Command(String name, String description, CommandDataModifier modifier, String... aliases) {
+        this.name = name;
+        this.description = description;
+        this.aliases = aliases;
+        this.commandDataModifier = modifier;
+    }
+
     protected Command(String name, String description, Permission permission) {
         this.name = name;
         this.description = description;
         this.permission = permission;
+    }
+
+    protected Command(String name, String description, Permission permission, CommandDataModifier modifier) {
+        this.name = name;
+        this.description = description;
+        this.permission = permission;
+        this.commandDataModifier = modifier;
     }
 
     protected Command(String name, String description, Permission permission, String... aliases) {
@@ -60,6 +79,14 @@ public abstract class Command {
         this.aliases = aliases;
     }
 
+    protected Command(String name, String description, Permission permission, CommandDataModifier modifier, String... aliases) {
+        this.name = name;
+        this.description = description;
+        this.permission = permission;
+        this.aliases = aliases;
+        this.commandDataModifier = modifier;
+    }
+
     /**
      * Command Method for Commands without SubCommands
      * Note that using this Method will not check for Permissions
@@ -67,14 +94,14 @@ public abstract class Command {
      * @param user  The executing User
      * @param event The Event that belongs to this Command Execution
      */
-    protected CommandResult<?> onCommand(User user, SlashCommandEvent event) {
+    protected CommandResult<?> onCommand(User user, SlashCommandInteractionEvent event) {
         return CommandResult.unknown(this, new CommandUser(user), event);
     }
 
     /**
      * Command Method for Commands without SubCommands that can only be executed in Guilds
-     * */
-    protected CommandResult<?> onGuildCommand(Member member, SlashCommandEvent event) {
+     */
+    protected CommandResult<?> onGuildCommand(Member member, SlashCommandInteractionEvent event) {
         return CommandResult.dynamic("Unused", this, new CommandUser(member.getUser(), member), event);
     }
 
@@ -87,20 +114,16 @@ public abstract class Command {
     public void onError(CommandResult<? extends Throwable> e) {
     }
 
-    /**
-     * Register the Options for this Command
-     * FOR COMMAND WITHOUT SUBCOMMANDS ONLY
-     */
-    public Collection<OptionData> registerOptions() {
-        return Collections.emptySet();
-    }
-
     public String getName() {
         return name;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public boolean isGuildCommand() {
+        return guildCommand;
     }
 
     public Permission getPermission() {
@@ -122,6 +145,11 @@ public abstract class Command {
     }
 
     @ApiStatus.Internal
+    public void setGuildCommand(boolean guildCommand) {
+        this.guildCommand = guildCommand;
+    }
+
+    @ApiStatus.Internal
     public void setSubCommandRegistry(SubCommandRegistry subCommandRegistry) {
         this.subCommandRegistry = subCommandRegistry;
     }
@@ -140,9 +168,9 @@ public abstract class Command {
      */
     public CommandData toCommandData() throws NoSuchMethodException, InstantiationException,
             IllegalAccessException, InvocationTargetException {
-        CommandData data = new CommandData(getName(), getDescription());
+        SlashCommandData data = Commands.slash(name, description);
 
-        if (getSubCommandRegistry() != null) {
+        if (subCommandRegistry != null) {
             Map<String, SubcommandGroupData> subcommandGroups = new HashMap<>();
 
             for (SubCommandRegistry.SubCommandInfo subCommandInfo : subCommandRegistry) {
@@ -154,18 +182,16 @@ public abstract class Command {
 
                 SubcommandData subData = new SubcommandData(subCommand.name(), subCommand.description());
 
-                Class<? extends CommandOption> option = subCommand.options();
+                Class<? extends SubCommandDataModifier> dataModifier = subCommand.dataModifier();
 
-                if (option != CommandOption.class && option != null) {
-                    Method optionsMethod = option.getMethod("getOptions");
-                    Object optionsObject = optionsMethod.invoke(option.newInstance());
+                if (dataModifier != SubCommandDataModifier.class && dataModifier != null) {
+                    Method modifyMethod = dataModifier.getMethod("modify", SubcommandData.class);
+                    Object modifiedData = modifyMethod.invoke(dataModifier.newInstance(), subData);
 
-                    if (!(optionsObject instanceof Collection))
-                        throw new IllegalArgumentException("The provided Class of CommandOption does not return a Collection");
+                    if (!(modifiedData instanceof SubcommandData))
+                        throw new IllegalArgumentException("The provided Class does not return a SubCommandData");
 
-                    Collection<OptionData> options = (Collection<OptionData>) optionsObject;
-
-                    subData.addOptions(options);
+                    subData = (SubcommandData) modifiedData;
                 }
 
                 if (!subCommand.subCommandGroup().equals("")) {
@@ -184,9 +210,9 @@ public abstract class Command {
             return data;
         }
 
-        Collection<OptionData> options = registerOptions();
-
-        data.addOptions(options);
+        if (commandDataModifier != null) {
+            data = commandDataModifier.modify(data);
+        }
 
         return data;
     }
