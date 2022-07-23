@@ -210,8 +210,8 @@ public abstract class Command {
             return data;
         }
 
-        if (commandDataModifier != null) {
-            data = commandDataModifier.modify(data);
+        if (this.commandDataModifier != null) {
+            data = this.commandDataModifier.modify(data);
         }
 
         return data;
