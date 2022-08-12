@@ -6,13 +6,14 @@ Created 11.01.2022 - 02:06
 
 package xyz.cronixzero.sapota.commands;
 
-import com.google.common.flogger.FluentLogger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 import xyz.cronixzero.sapota.commands.listener.CommandListener;
 import xyz.cronixzero.sapota.commands.messaging.MessageContainer;
@@ -29,7 +30,7 @@ import java.util.function.Consumer;
 
 public class DefaultCommandHandler implements CommandHandler {
 
-    private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+    private static final Logger logger = LogManager.getLogger();
 
     private final Map<String, Command> commands = new HashMap<>();
     private final MessageContainer messageContainer;
@@ -49,7 +50,7 @@ public class DefaultCommandHandler implements CommandHandler {
             command.getClass().getDeclaredMethod("onGuildCommand", Member.class, SlashCommandInteractionEvent.class);
 
             command.setGuildCommand(true);
-            logger.atFine().log("Identified %s as a Guild Command", command.getName());
+            logger.atTrace().log("Identified {} as a Guild Command", command.getName());
         } catch (NoSuchMethodException e) {
             /* DO NOTHING */
         }
@@ -78,7 +79,7 @@ public class DefaultCommandHandler implements CommandHandler {
         if (command.getAliases() != null) {
             for (String alias : command.getAliases()) {
                 commands.computeIfPresent(alias, (k, v) -> {
-                    logger.atWarning().log("Received alias %s which is already referenced with a command", k);
+                    logger.atWarn().log("Received alias {} which is already referenced with a command", k);
                     return v;
                 });
             }
@@ -107,14 +108,14 @@ public class DefaultCommandHandler implements CommandHandler {
             try {
                 updateAction.addCommands(command.toCommandData());
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                logger.atSevere().withCause(e).log("Could not convert a Command to JDA CommandData");
+                logger.atFatal().withThrowable(e).log("Could not convert a Command to JDA CommandData");
             }
         }
 
         try {
             updateAction.queue();
         } catch (RejectedExecutionException e) {
-            logger.atSevere().withCause(e).log("Could not send the CommandFlush to Discord's Api");
+            logger.atFatal().withThrowable(e).log("Could not send the CommandFlush to Discord's Api");
         }
 
         updateAction.getJDA().addEventListener(new CommandListener(this));
@@ -147,7 +148,7 @@ public class DefaultCommandHandler implements CommandHandler {
             if (handler != null)
                 handler.invoke(command, result);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            logger.atSevere().withCause(e).log("Could not invoke ResponseHandler");
+            logger.atFatal().withThrowable(e).log("Could not invoke ResponseHandler");
             result = CommandResult.error(e, command, user, event);
         }
 
@@ -193,7 +194,7 @@ public class DefaultCommandHandler implements CommandHandler {
 
             return result;
         } catch (IllegalAccessException | InvocationTargetException e) {
-            logger.atWarning().withCause(e).log("Could not invoke SubCommandMethod or Handler");
+            logger.atError().withThrowable(e).log("Could not invoke SubCommandMethod or Handler");
             return CommandResult.error(e, command, user, event);
         }
     }
