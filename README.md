@@ -44,7 +44,7 @@ implementation 'xyz.cronixzero.sapota:discord-presence:1.1.0'
 | Latest Version 	| Supported JDA Version 	| Continued 	|
 |----------------	|-----------------------	|-----------	|
 | 1.1.0          	| 4.4.X                 	| ❌         	|
-| 2.1.1          	| 5.0.X                 	| ✅         	|
+| 2.1.3          	| 5.0.X                 	| ✅         	|
 
 You need to insert the Version for "VERSION"
 
