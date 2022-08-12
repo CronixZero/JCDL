@@ -6,9 +6,10 @@ Created 09.01.2022 - 22:05
 
 package xyz.cronixzero.sapota.commands.messaging;
 
-import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -20,7 +21,7 @@ import java.nio.file.Paths;
  */
 public class MessageContainer {
 
-    private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+    private static final Logger logger = LogManager.getLogger();
 
     private static final String DEFAULT_CONFIGURATION_FILE = "./commands.json";
 
@@ -104,7 +105,7 @@ public class MessageContainer {
         try {
             return gson.fromJson(new FileReader(file), MessageContainer.class);
         } catch (FileNotFoundException e) {
-            logger.atSevere().withCause(e).log("Could not parse '" + file.getName() + "' because it does not exist.");
+            logger.atFatal().withThrowable(e).log("Could not parse '" + file.getName() + "' because it does not exist.");
         }
 
         return null;
@@ -123,7 +124,7 @@ public class MessageContainer {
             try {
                 Files.copy(stream, Paths.get("./"));
             } catch (IOException e) {
-                logger.atSevere().withCause(e).log("Could not copy Configuration File outside");
+                logger.atFatal().withThrowable(e).log("Could not copy Configuration File outside");
                 return null;
             }
         }

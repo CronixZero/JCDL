@@ -1,0 +1,27 @@
+{
+  "configuration": {
+    "status": "Default",
+    "name": "Discord Bot",
+    "packages": "xyz.cronixzero.sapota",
+    "ThresholdFilter": {
+      "level": "debug",
+      "onMatch": "ACCEPT"
+    },
+    "appenders": {
+      "Console": {
+        "name": "STDOUT",
+        "PatternLayout": {
+          "pattern": "[%d{HH:mm:ss}] [%t/%level]: %msg%n"
+        }
+      }
+    },
+    "loggers": {
+      "root": {
+        "level": "debug",
+        "AppenderRef": {
+          "ref": "STDOUT"
+        }
+      }
+    }
+  }
+}

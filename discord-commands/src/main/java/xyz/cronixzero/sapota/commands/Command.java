@@ -206,8 +206,6 @@ public abstract class Command {
             }
 
             data.addSubcommandGroups(subcommandGroups.values());
-
-            return data;
         }
 
         if (this.commandDataModifier != null) {
