@@ -40,15 +40,35 @@ public abstract class Command {
         this.description = description;
     }
 
+    protected Command(String name, String description, boolean guildCommand) {
+        this.name = name;
+        this.description = description;
+        this.guildCommand = guildCommand;
+    }
+
     protected Command(String name, String description, CommandDataModifier modifier) {
         this.name = name;
         this.description = description;
         this.commandDataModifier = modifier;
     }
 
+    protected Command(String name, String description, CommandDataModifier modifier, boolean guildCommand) {
+        this.name = name;
+        this.description = description;
+        this.commandDataModifier = modifier;
+        this.guildCommand = guildCommand;
+    }
+
     protected Command(String name, String description, String... aliases) {
         this.name = name;
         this.description = description;
+        this.aliases = aliases;
+    }
+
+    protected Command(String name, String description, boolean guildCommand, String... aliases) {
+        this.name = name;
+        this.description = description;
+        this.guildCommand = guildCommand;
         this.aliases = aliases;
     }
 
@@ -59,9 +79,24 @@ public abstract class Command {
         this.commandDataModifier = modifier;
     }
 
+    protected Command(String name, String description, CommandDataModifier modifier, boolean guildCommand, String... aliases) {
+        this.name = name;
+        this.description = description;
+        this.aliases = aliases;
+        this.commandDataModifier = modifier;
+        this.guildCommand = guildCommand;
+    }
+
     protected Command(String name, String description, Permission permission) {
         this.name = name;
         this.description = description;
+        this.permission = permission;
+    }
+
+    protected Command(String name, String description, Permission permission, boolean guildCommand) {
+        this.name = name;
+        this.description = description;
+        this.guildCommand = guildCommand;
         this.permission = permission;
     }
 
@@ -72,11 +107,27 @@ public abstract class Command {
         this.commandDataModifier = modifier;
     }
 
+    protected Command(String name, String description, Permission permission, CommandDataModifier modifier, boolean guildCommand) {
+        this.name = name;
+        this.description = description;
+        this.permission = permission;
+        this.commandDataModifier = modifier;
+        this.guildCommand = guildCommand;
+    }
+
     protected Command(String name, String description, Permission permission, String... aliases) {
         this.name = name;
         this.description = description;
         this.permission = permission;
         this.aliases = aliases;
+    }
+
+    protected Command(String name, String description, Permission permission, boolean guildCommand, String... aliases) {
+        this.name = name;
+        this.description = description;
+        this.permission = permission;
+        this.aliases = aliases;
+        this.guildCommand = guildCommand;
     }
 
     protected Command(String name, String description, Permission permission, CommandDataModifier modifier, String... aliases) {
@@ -85,6 +136,16 @@ public abstract class Command {
         this.permission = permission;
         this.aliases = aliases;
         this.commandDataModifier = modifier;
+    }
+
+    protected Command(String name, String description, Permission permission,
+                      CommandDataModifier modifier, boolean guildCommand, String... aliases) {
+        this.name = name;
+        this.description = description;
+        this.permission = permission;
+        this.aliases = aliases;
+        this.commandDataModifier = modifier;
+        this.guildCommand = guildCommand;
     }
 
     /**
@@ -169,6 +230,8 @@ public abstract class Command {
     public CommandData toCommandData() throws NoSuchMethodException, InstantiationException,
             IllegalAccessException, InvocationTargetException {
         SlashCommandData data = Commands.slash(name, description);
+
+        data.setGuildOnly(guildCommand);
 
         if (subCommandRegistry != null) {
             Map<String, SubcommandGroupData> subcommandGroups = new HashMap<>();
