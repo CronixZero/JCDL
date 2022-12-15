@@ -1,7 +1,5 @@
 package xyz.cronixzero.sapota.commands.listener;
 
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -59,24 +57,20 @@ public class CommandListener extends ListenerAdapter {
 
             case ERROR:
                 if (messages.isErrorMessageEnabled()) {
-                    Message message = new MessageBuilder(String.format(messages.getErrorMessage(),
-                            user.getUser().getAsMention())).build();
-                    event.reply(message).queue();
+                    event.reply(String.format(messages.getErrorMessage(), user.getUser().getAsMention())).queue();
                 }
                 break;
 
             case NO_PERMISSIONS:
                 if (messages.isNoPermissionMessageEnabled()) {
-                    Message message = new MessageBuilder(String.format(messages.getNoPermissionMessage(),
-                            user.getUser().getAsMention())).build();
-                    event.reply(message).queue();
+                    event.reply(String.format(messages.getNoPermissionMessage(),
+                            user.getUser().getAsMention())).queue();
                 }
                 break;
 
             case WRONG_CHANNEL_TYPE:
-                Message message = new MessageBuilder(String.format(messages.getWrongChannelType(),
-                        user.getUser().getAsMention())).build();
-                event.reply(message).queue();
+                event.reply(String.format(messages.getWrongChannelType(),
+                        user.getUser().getAsMention())).queue();
                 break;
 
             default:

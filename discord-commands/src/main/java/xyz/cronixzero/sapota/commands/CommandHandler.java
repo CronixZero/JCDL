@@ -9,6 +9,7 @@ package xyz.cronixzero.sapota.commands;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.jetbrains.annotations.ApiStatus;
 import xyz.cronixzero.sapota.commands.messaging.MessageContainer;
 import xyz.cronixzero.sapota.commands.result.CommandResponseHandler;
@@ -31,6 +32,15 @@ public interface CommandHandler {
      * @see Command
      */
     Command registerCommand(Command command);
+
+    /**
+     * This will register the CommandData ofter {@link CommandHandler#flushCommands(JDA)}
+     * or {@link CommandHandler#flushCommands(Guild)} is called
+     * <p>
+     * Please note that raw Commands are not handled, just sent to Discord.
+     * You will have to handle them yourself
+     */
+    void registerRawCommand(CommandData commandData);
 
     /**
      * Send all registered {@link Command}s to every Guild, the Bot is on
