@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,6 +34,7 @@ public class DefaultCommandHandler implements CommandHandler {
     private static final Logger logger = LogManager.getLogger();
 
     private final Map<String, Command> commands = new HashMap<>();
+    private final Set<CommandData> rawCommands = new HashSet<>();
     private final MessageContainer messageContainer;
 
     private Consumer<Command> commandSuccessAction;
@@ -89,6 +91,11 @@ public class DefaultCommandHandler implements CommandHandler {
     }
 
     @Override
+    public void registerRawCommand(CommandData commandData) {
+        rawCommands.add(commandData);
+    }
+
+    @Override
     public void flushCommands(JDA bot) {
         flushCommands(bot.updateCommands());
     }
@@ -111,6 +118,8 @@ public class DefaultCommandHandler implements CommandHandler {
                 logger.atFatal().withThrowable(e).log("Could not convert a Command to JDA CommandData");
             }
         }
+
+        rawCommands.forEach(updateAction::addCommands);
 
         try {
             updateAction.queue();
