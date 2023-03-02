@@ -39,7 +39,7 @@ subprojects {
 
     dependencies {
         // JDA
-        implementation("net.dv8tion:JDA:4.4.0_350") {
+        implementation("net.dv8tion:JDA:4.4.1_353") {
             exclude module: 'opus-java'
         }
 
